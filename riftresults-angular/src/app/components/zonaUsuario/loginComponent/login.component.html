@@ -1,0 +1,67 @@
+<div class="bg-body-secondary container m-2 p-2 rounded">
+<div class="">
+    <br/>
+    <h1 class="text-center">Inicio de sesión</h1>
+    <p class="text-center">Inicia sesión en tu cuenta de Rift Results.</p>
+    <hr/>
+    <hr/>
+</div>
+
+<form [formGroup]="formLogin" (ngSubmit)="Login()">
+    <div class="form-outline mb-4 col-6 mx-auto">
+      <label class="form-label" for="email">Email</label>
+      <input formControlName="email" type="text" id="email" class="form-control" required placeholder="ejemplo@riftresults.com" />
+      @if (formLogin.controls['email'].errors?.['email'] && formLogin.controls['email'].touched) {
+        <span class="text-danger">* Formato de email invalido</span>
+      }
+
+    </div>
+  
+    <div class="form-outline mb-4 col-6 mx-auto">
+      <label class="form-label" for="pwd" >Contraseña</label>
+      <input formControlName="password" type="password" id="pwd" class="form-control" placeholder="********"/>
+    </div>
+  
+    <div class="row mb-4">
+      <span class="text text-danger text-center">{{msgError}}</span>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col d-flex justify-content-center">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="recordar" checked />
+          <label class="form-check-label" for="recordar"> Recuérdame </label>
+        </div>
+      </div>
+  
+      <div class="col">
+        <a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" 
+           href="#!">¿Has olvidado tu contraseña?</a>
+      </div>
+    </div>
+    <div class="row text-center mx-auto">
+        <div class="col"></div>
+        <div class="col"><button type="submit" class="btn btn-primary mb-4 mx-auto btn-azuloscuro" [disabled]="formLogin.status!=='VALID'">Iniciar sesión</button></div>
+        <div class="col"></div>
+    </div>
+    
+  
+    <div class="text-center">
+      <p>¿No tienes cuenta?<a [routerLink]="['/Cliente/Registro']" 
+        class="mx-2 link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Regístrate</a></p>
+      <p>o inicia sesión con:</p>
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fa fa-facebook-f"></i>
+      </button>
+  
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fa fa-google"></i>
+      </button>
+  
+      <button type="button" class="btn btn-link btn-floating mx-1">
+        <i class="fa fa-twitter"></i>
+      </button>
+  
+    </div>
+  </form>
+</div>

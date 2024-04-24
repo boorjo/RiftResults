@@ -1,0 +1,140 @@
+<div class="bg-body-secondary container m-2 p-2 rounded">
+<div class="">
+    <br/>
+    <h1 class="text-center">Registro</h1>
+    <p class="text-center">Regístrate en Rift Results para poder personalizar tu cuenta, seguir equipos, competiciones, y acceder al foro.</p>
+</div>
+<hr/>
+<hr/>
+
+<form [formGroup]="formRegistro" class="mt-2" (ngSubmit)="RegistrarUsuario()">
+  <div class="row">
+    <div class="col-md-6">
+      <label for="nombre" class="form-label">Nombre</label>
+      <input formControlName="nombre" type="text" class="form-control" id="nombre" required placeholder="Nombre" />
+      @if (formRegistro.controls['nombre'].errors?.['required'] &&  formRegistro.controls['nombre'].touched) {
+        <span class="text-danger">* Nombre Obligatorio</span>
+      }
+      @if (formRegistro.controls['nombre'].errors?.['minlength'] && formRegistro.controls['nombre'].touched) {
+        <span class="text-danger">* Numero mínimo de caracteres: 3</span>
+      }
+      @if (formRegistro.controls['nombre'].errors?.['maxlength'] && formRegistro.controls['nombre'].touched) {
+        <span class="text-danger">* Numero máximo de caracteres: 50</span>
+      }
+    </div>
+    <div class="col-md-6">
+      <label for="apellidos" class="form-label">Apellidos</label>
+      <input formControlName="apellidos" type="text" class="form-control" id="apellidos" required placeholder="Apellidos" />
+      @if (formRegistro.controls['apellidos'].errors?.['required'] &&  formRegistro.controls['apellidos'].touched) {
+        <span class="text-danger">* Apellidos Obligatorios</span>
+      }
+      @if (formRegistro.controls['apellidos'].errors?.['minlength'] && formRegistro.controls['apellidos'].touched) {
+        <span class="text-danger">* Apellidos mínimo de caracteres: 3</span>
+      }
+      @if (formRegistro.controls['apellidos'].errors?.['maxlength'] && formRegistro.controls['apellidos'].touched) {
+        <span class="text-danger">* Apellidos máximo de caracteres: 200</span>
+      }
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="login" class="form-label">Login</label>
+      <input formControlName="login" type="text" class="form-control" id="login" required placeholder="Nick de login"/>
+    </div>
+    <div class="col-md-6">
+      <label for="email" class="form-label">Email</label>
+      <input formControlName="email" type="email" class="form-control" id="email" required placeholder="ejemplo@riftresults.com" />
+      @if (formRegistro.controls['email'].errors?.['required'] &&  formRegistro.controls['email'].touched) {
+        <span class="text-danger" >* Email Obligatorio</span>
+      }
+      @if (formRegistro.controls['email'].errors?.['email'] && formRegistro.controls['email'].touched) {
+        <span class="text-danger">* Formato de email invalido</span>
+      }
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="password" class="form-label">Contraseña</label>
+      <input formControlName="password" type="password" class="form-control" id="password" required placeholder="********"/>
+      @if (formRegistro.controls['password'].errors?.['required'] &&  formRegistro.controls['password'].touched) {
+        <span class="text-danger">* Contraseña obligatoria</span>
+      }
+      @if (formRegistro.controls['password'].errors?.['minlength'] && formRegistro.controls['password'].touched) {
+        <span class="text-danger">* Mínimo 5 caracteres en contraseña</span><br/>
+      }
+      @if (formRegistro.controls['password'].errors?.['pattern'] && formRegistro.controls['password'].touched) {
+        <span class="text-danger">* La contraseña debe contener 1 letra MAYS, 1 número y un caracter alfanumerico</span>  
+      }
+    </div>
+    <div class="col-md-6">
+      <label for="confirmPassword" class="form-label">Repetir Contraseña</label>
+      <input formControlName="repassword" type="password" class="form-control" id="confirmPassword" required placeholder="********"/>
+      @if (formRegistro.controls['repassword'].errors?.['required'] &&  formRegistro.controls['repassword'].touched) {
+        <span class="text-danger" >* Contraseña obligatoria </span><br/>
+      }
+      @if (formRegistro.controls['repassword'].errors?.['minlength'] && formRegistro.controls['repassword'].touched) {
+        <span class="text-danger">* Mínimo 5 caracteres en contraseña</span><br/>
+      }
+      @if (formRegistro.controls['repassword'].errors?.['pattern'] && formRegistro.controls['repassword'].touched) {
+        <span class="text-danger">* La contraseña debe contener 1 letra MAYS, 1 número y un caracter alfanumerico</span><br/>
+      }
+      @if (formRegistro.controls['repassword'].errors?.['compareTo'] && formRegistro.controls['repassword'].touched) {
+        <span class="text-danger">* Las contraseñas no coinciden</span><br/>
+      }
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="telefono" class="form-label">Teléfono <i>(opcional)</i></label>
+      <input formControlName="telefono" type="tel" class="form-control" id="telefono" placeholder="666112233" />
+      @if (formRegistro.controls['telefono'].errors?.['pattern'] && formRegistro.controls['telefono'].touched) {
+        <span class="text-danger">* Formato de teléfono incorrecto</span>
+      }
+    </div>
+    <div class="col-md-6">
+      <label for="pais" class="form-label">País</label>
+      <input formControlName="pais" type="text" class="form-control" id="pais" required placeholder="España"/>
+      @if (formRegistro.controls['pais'].errors?.['required'] && formRegistro.controls['pais'].touched) {
+        <span class="text-danger">* Indica tu país</span>
+      }
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <label for="rol" class="form-label">Rol Favorito</label>
+      <select formControlName="rol" class="form-control" id="rol" required>
+        <option value="">Selecciona un rol</option>
+        <option value="Top">Top</option>
+        <option value="Mid">Mid</option>
+        <option value="Jungle">Jungle</option>
+        <option value="ADC">ADC</option>
+        <option value="Support">Support</option>
+      </select>
+      @if (formRegistro.controls['rol'].errors?.['required'] && formRegistro.controls['rol'].touched) {
+        <span class="text-danger">* Indica tu rol favorito de juego</span>
+      }
+    </div>
+    <div class="col-md-6">
+      <label for="equipo" class="form-label">Equipo Favorito</label>
+      <input formControlName="equipo" type="text" class="form-control" id="equipo" placeholder="Ej: Heretics" />
+    </div>
+  </div>
+  <br/>
+  <div class="row mx-auto text-center">
+    <div class="col"></div>
+    <div class="col"><button type="submit" class="btn btn-primary btn-azuloscuro mx-auto" [disabled]="formRegistro.status!=='VALID'">Registrarse</button></div>
+    <div class="col"></div>
+  </div>
+  <div class="row mx-auto text-cente">
+    <span class="text text-danger">{{msgError}}</span>
+  </div>
+  <div class="row mx-auto-text-center justify-content-center my-3 text-center">
+    ¿Ya tienes cuenta? <a class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                          [routerLink]="['/Cliente/Login']" >Inicia sesión</a>
+  </div>
+</form>
+</div>

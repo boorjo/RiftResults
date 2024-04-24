@@ -1,0 +1,21 @@
+.fondo {
+    background-color: rgb(1, 17, 40);
+}
+
+.fondogris {
+    background-color: rgb(97, 97, 97)
+}
+
+
+.ablanco:hover {
+    color: white !important;
+}
+
+@media (max-width: 768px) {
+    .ablanco {
+        font-size: 2.4vw;
+    }
+    
+
+}
+

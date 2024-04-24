@@ -1,0 +1,7 @@
+.btn-azuloscuro{
+    background-color: rgb(1, 17, 40);
+}
+
+.btn-azuloscuro:hover{
+    background-color: rgb(0, 106, 255);
+}
