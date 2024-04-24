@@ -5,7 +5,7 @@ import { RegistroOKComponent } from './components/zonaUsuario/registroOKComponen
 import { CuentaActivaComponent } from './components/zonaUsuario/cuentaActivadaComponent/cuenta-activa.component';
 import { InicioComponent } from './components/zonaPortal/inicioComponent/inicio.component';
 import { TerminosYPrivacidadComponent } from './components/zonaPortal/terminosServiciosComponent/terminosyservicios.component';
-import { CampeonesComponent } from './components/zonaPortal/campeones/campeonesComponent/campeones/campeones.component';
+import { CampeonesComponent } from './components/zonaPortal/campeones/campeonesComponent/campeones.component';
 
 export const routes: Routes = [
   {

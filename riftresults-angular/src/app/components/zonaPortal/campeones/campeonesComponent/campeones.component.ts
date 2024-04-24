@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
-import { ICampeon } from '../../../../../models/campeon';
-import { ApicampeonesService } from '../../../../../servicios/apicampeones.service';
+import { ICampeon } from '../../../../models/campeon';
+import { ApicampeonesService } from '../../../../servicios/apicampeones.service';
 import Chart from 'chart.js/auto';
 
 @Component({
