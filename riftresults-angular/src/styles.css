@@ -3,19 +3,36 @@
     background-color: rgb(1, 17, 40);
 }
 
+.btn-azuloscuro{
+    background-color: rgb(1, 17, 40);
+}
+
+.btn-azuloscuro:hover{
+    background-color: rgb(0, 106, 255);
+}
+
 body {
     font-size: 14px;
+}
+
+.img-fluid.rounded-circle {
+    max-width: 100px;
 }
 
 @media (min-width: 600px) {
     body {
         font-size: 16px;
     }
-    
+    .img-fluid.rounded-circle {
+        max-width: 120px;
+    }
 }
 
 @media (min-width: 900px) {
     body {
         font-size: 18px;
+    }
+    .img-fluid.rounded-circle {
+        max-width: 150px;
     }
 }

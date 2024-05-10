@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt'); //<----- paquete para cifrar y comprobar hashe
 const jsonwebtoken = require('jsonwebtoken'); // <---- paquete para generar JWT o tokens de sesion para cada cliente....
 
 var Cliente = require('../modelos/cliente');
+var Rol = require ('../modelos/rol');
 const MailjetService = require('../servicios/mailjetservice');
 const mailjetService = new MailjetService();
 
@@ -9,19 +10,18 @@ async function comprobarCliente(email, login) {
     try {
         let camposExistentes = [];
         
-        // Buscar si hay un cliente con el email proporcionado
+        // Buscar x email
         const clienteByEmail = await Cliente.findOne({ 'cuenta.email': email });
         if (clienteByEmail) {
             camposExistentes.push('email');
         }
 
-        // Buscar si hay un cliente con el login proporcionado
+        // Buscar x login
         const clienteByLogin = await Cliente.findOne({ 'cuenta.login': login });
         if (clienteByLogin) {
             camposExistentes.push('login');
         }
 
-        // Si no se encontraron clientes con ninguno de los campos proporcionados, devolver un arreglo vacío
         if (camposExistentes.length === 0) {
             return [];
         } else {
@@ -33,6 +33,19 @@ async function comprobarCliente(email, login) {
     }
 }
 
+async function comprobarLogin(login, idCliente) {
+    let existe = false;
+    try {
+        const clienteByLogin = await Cliente.findOne({ 'cuenta.login': login, '_id': { $ne: idCliente } });
+        if (clienteByLogin) {
+            existe = true;
+        }
+        return existe;
+    } catch (error) {
+        console.log('Error al comprobar login:', error);
+        throw new Error('Error al comprobar login');
+    }
+}
 
 module.exports = {
     registro: async(req,res,next) => {
@@ -63,7 +76,8 @@ module.exports = {
                     cuentaActiva: false,
                     login: cliente.login,
                     imagenAvatarBASE64: '',
-                    premium: false
+                    premium: false,
+                    esAdmin: false
                 },
                 telefono: cliente.telefono,
                 pais: cliente.pais,
@@ -199,5 +213,65 @@ module.exports = {
             );
         }
     },
+    recuperarRoles: async (req, res, next) => {
+        try {
+            const roles = await Rol.find({});
+            res.status(200).send({
+                codigo: 0,
+                mensaje: 'Roles recuperados correctamente',
+                otrosdatos: roles
+            });
+        } catch (error) {
+            console.log('Error al recuperar roles:', error);
+            res.status(200).send({
+                codigo: 1,
+                mensaje: 'Error al recuperar roles'
+            });
+        }
+    },
+    modificarPerfil: async (req, res, next) => {
+        try {
+            //comprobar primero si el login existe en otro cliente distinto al q me mandan
+            const cliente = req.body;
+            const existe = await comprobarLogin(cliente.cuenta.login, cliente._id);
+            console.log('Datos del cliente a modificar:', cliente);
+            const _cliente = await Cliente.findById(cliente._id);
+            if (!_cliente) {
+                res.status(200).send({
+                    codigo: 1,
+                    mensaje: 'No se ha encontrado el cliente'
+                });
+                return;
+            }
+            if (existe) {
+                res.status(200).send({
+                    codigo: 1,
+                    mensaje: 'El login ya existe en otro cliente'
+                });
+                return;
+            }
+            //hacer update de los datos del cliente con el objeto cliente q me mandan
+            _cliente.nombre = cliente.nombre;
+            _cliente.apellidos = cliente.apellidos;
+            _cliente.cuenta.login = cliente.cuenta.login;
+            _cliente.telefono = cliente.telefono;
+            _cliente.pais = cliente.pais;
+            _cliente.cuenta.imagenAvatarBASE64 = cliente.cuenta.imagenAvatarBASE64;
+            _cliente.datosLol.rol = cliente.datosLol.rol;
+            await _cliente.save();
+            res.status(200).send({
+                codigo: 0,
+                mensaje: 'Perfil modificado correctamente'
+            });
+
+        } catch (error) {
+            console.log('Error al modificar perfil:', error);
+            res.status(200).send({
+                codigo: 1,
+                mensaje: 'Error al modificar perfil'
+            });
+        }
+    }
+
 }
 

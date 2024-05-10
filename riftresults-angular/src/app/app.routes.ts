@@ -6,6 +6,8 @@ import { CuentaActivaComponent } from './components/zonaUsuario/cuentaActivadaCo
 import { InicioComponent } from './components/zonaPortal/inicioComponent/inicio.component';
 import { TerminosYPrivacidadComponent } from './components/zonaPortal/terminosServiciosComponent/terminosyservicios.component';
 import { CampeonesComponent } from './components/zonaPortal/campeones/campeonesComponent/campeones.component';
+import { PanelClienteComponent } from './components/zonaUsuario/panelClienteComponent/panel-cliente.component';
+import { accesoPerfilGuard } from './servicios_guards/acceso-perfil.guard';
 
 export const routes: Routes = [
   {
@@ -14,8 +16,8 @@ export const routes: Routes = [
       { path: 'Registro', component: RegistroComponent },
       { path: 'Registrook', component: RegistroOKComponent },
       { path: 'Login', component: LoginComponent },
-      { path: 'ActivarCuenta/:token', component: CuentaActivaComponent }
-      //{ path: 'PanelCliente', component: PanelClienteComponent } <-- solo accesible si logueados
+      { path: 'ActivarCuenta/:token', component: CuentaActivaComponent },
+      { path: 'PanelCliente', component: PanelClienteComponent, canActivate: [accesoPerfilGuard] } // <-- solo accesible si logueados meter guard
     ]
   },
   {

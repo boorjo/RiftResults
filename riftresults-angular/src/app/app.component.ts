@@ -26,6 +26,7 @@ export class AppComponent {
   public datoscliente = signal<ICliente | null>(null);
   public jwt = signal<string>("");
   private loginSubscription: Subscription;
+  public esAdmin = signal<boolean>(false);
 
   constructor(private router:Router,
               @Inject(TOKEN_SERVICIOSTORAGE) private storageSvc:IStorageService){
@@ -35,6 +36,8 @@ export class AppComponent {
       this.datoscliente.update(() => this.storageSvc.RecuperarDatosCliente());
       console.log('Datos cliente...', this.datoscliente());
       this.jwt.update(() => this.storageSvc.RecuperarJWT());
+      this.esAdmin.update(() => this.datoscliente()?.cuenta?.esAdmin || false);
+      console.log('Es admin: ', this.esAdmin());
       //console.log('token recuperado...', this.jwt());
     });
 
@@ -43,6 +46,7 @@ export class AppComponent {
   CerrarSesion(){
     this.storageSvc.AlmacenarDatosCliente(null);
     this.storageSvc.AlmacenarJWT("");
+    this.esAdmin.update(() => false); //aseguramos de que no se quede como admin sin sesion
     console.log('Sesión cerrada...');
     loginEvent.next(); //para q se refresque la vista!
     this.router.navigate(['/Cliente/Login']);

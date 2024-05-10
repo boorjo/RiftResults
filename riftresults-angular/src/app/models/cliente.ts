@@ -4,17 +4,18 @@ export interface ICliente {
     nombre:     string;
     apellidos:  string;
     cuenta:     {
-        email:        string,
-        password:     string,
-        login:        string,
-        cuentaActiva: boolean,
-        imagenBASE64?:string,
-        premium?:     boolean
+        email:                  string,
+        password:               string,
+        login:                  string,
+        cuentaActiva:           boolean,
+        imagenAvatarBASE64?:    string,
+        premium?:               boolean,
+        esAdmin?:               boolean
     };
     telefono?:  string;
     pais:       string;
     datosLol: {
-        rolFavorito:    string;
+        rol:    string;
         equipos?:       Array<string>;
         campeones?:     Array<ICampeon>;
     }

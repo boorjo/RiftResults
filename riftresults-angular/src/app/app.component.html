@@ -1,4 +1,4 @@
-<div class="">
+<div class="fondo">
   <header class="fondo">
     <div class="align-items-center d-flex justify-content-between">
       <img src="../assets/img/RiftResults Logo.jpg" class="img-fluid" width="8%" alt="Logo" />
@@ -37,11 +37,11 @@
       <div class="col align-items-end">
         <!-- si hay un objeto sesion CLIENTE muestro el boton con su email y nombre y apellidos para q acceda a su PANEL, sino al LOGIN-->
         @if ( this.datoscliente() ) {
-          <i class="fa fa-light fa-user mx-2 my-1 text-white-50 ablanco"></i>
-        <a [routerLink]="['/Cliente/Panel/InicioPanel']" routerLinkActive="router-link-active"
+          
+        <a [routerLink]="['/Cliente/PanelCliente']" routerLinkActive="router-link-active"
           class="btn bg-negro btn-sm">
-
-          <span class="nav-link text-white-50 d-flex ablanco">{{datoscliente()?.cuenta?.email}}</span>
+          <i class="fa fa-light fa-user mx-2 my-1 text-white-50 ablanco"></i>
+          <p class="nav-link text-white-50 d-flex ablanco">{{datoscliente()?.cuenta?.email}}</p>
         </a>
         <button class="pl-3 btn btn-sm btn-outline-secondary" (click)="CerrarSesion()"><i class="fa fa-solid fa-right-from-bracket text-white-50 ablanco"></i> Cerrar Sesión</button>
         }

@@ -42,7 +42,7 @@ export class LoginComponent {
         //console.log('Token sesion...', _resp.tokensesion);
         this.storageSvc.AlmacenarJWT(_resp.tokensesion!);
         //console.log('datos recuperados...', this.storageSvc.RecuperarDatosCliente());
-        this.router.navigateByUrl('/Cliente/Registro');
+        this.router.navigateByUrl('/Cliente/PanelCliente');
         loginEvent.next();
     } 
     else if(_resp.codigo===2){ 

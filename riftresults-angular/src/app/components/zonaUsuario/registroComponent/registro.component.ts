@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule, FormControl, Validators } from '@angular/forms';
 import { compareToValidator } from '../../../validators/compareTo';
 import { RestnodeService } from '../../../servicios/restnode.service';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { IRol } from '../../../models/rol';
+import { IRestMessage } from '../../../models/restmessage';
 
 @Component({
   selector: 'app-registro',
@@ -15,9 +17,10 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css'
 })
-export class RegistroComponent {
+export class RegistroComponent implements OnInit {
   public formRegistro: FormGroup;
   public msgError: string="";
+  public roles: IRol[] = [];
 
   constructor(private restNodeSvc:RestnodeService,
               private router:Router){
@@ -35,6 +38,18 @@ export class RegistroComponent {
       }
     );
   }
+
+  async ngOnInit() {
+    const _resp:IRestMessage = await this.restNodeSvc.RecuperarRoles();
+    console.log('_resp...', _resp);
+    if(_resp.codigo===0){
+      this.roles = _resp.otrosdatos!;
+    } 
+    else {
+      this.msgError="Error al recuperar roles."
+    }
+  }
+
   RegistrarUsuario(){
     const formData = this.formRegistro.value;
     console.log('DATOS RECIBIDOS PARA REGISTRO...', formData);

@@ -1,4 +1,4 @@
-<div class="bg-body-secondary container m-2 p-2 rounded">
+<div class="bg-body-secondary container m-2 p-4 rounded">
 <div class="">
     <br/>
     <h1 class="text-center">Registro</h1>
@@ -108,11 +108,9 @@
       <label for="rol" class="form-label">Rol Favorito</label>
       <select formControlName="rol" class="form-control" id="rol" required>
         <option value="">Selecciona un rol</option>
-        <option value="Top">Top</option>
-        <option value="Mid">Mid</option>
-        <option value="Jungle">Jungle</option>
-        <option value="ADC">ADC</option>
-        <option value="Support">Support</option>
+        @for (rol of roles; track $index) {
+          <option value="{{rol.nombre}}">{{rol.nombre}}</option>
+        }
       </select>
       @if (formRegistro.controls['rol'].errors?.['required'] && formRegistro.controls['rol'].touched) {
         <span class="text-danger">* Indica tu rol favorito de juego</span>

@@ -10,7 +10,8 @@ const clienteSchema = new mongoose.Schema(
             cuentaActiva: { type: Boolean, required: true, default: false },
             login: { type: String, maxLength: [100, '* Longitud máxima del email 100 caracteres.'] },
             imagenAvatarBASE64: { type: String, default: '' },
-            premium : { type: Boolean, default: false }
+            premium : { type: Boolean, default: false },
+            esAdmin: { type: Boolean, default: false }
         },
         telefono: { type: String, match: [/^\d{3}(\s?\d{2}){3}$/, '* El telefono tiene que tener formato 666 11 22 33'] },
         pais: { type: String, required: [true, '* País obligatorio'], maxLength: [50, '* Máxima longitud para país 50 caracteres'] },

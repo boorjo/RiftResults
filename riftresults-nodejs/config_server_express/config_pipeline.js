@@ -14,8 +14,8 @@ module.exports=function(servExp){
     // - body-parser: extrae de la pet.del cliente http-rerquest, del body los datos mandados en formato x-www-form-urlenconded o json extrae su valor y los mete en una prop.del objeto req.body
     // - cors: para evitar errores cross-origin-resouce-sharing
     servExp.use( cookieParser() );
-    servExp.use( bodyParser.json() );
-    servExp.use( bodyParser.urlencoded( { extended:true } ) ); 
+    servExp.use( bodyParser.json({limit:'50mb'}) );
+    servExp.use( bodyParser.urlencoded( {limit:'50mb', extended:true } ) ); 
     servExp.use(cors());
 
     /*middleware propios:

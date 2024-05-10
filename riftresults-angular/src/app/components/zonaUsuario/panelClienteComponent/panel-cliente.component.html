@@ -1,0 +1,96 @@
+<div class="container rounded bg-body-secondary mt-5 mb-5">
+    <div class="row">
+        <!--COLUMNA IZQDA (foto nombre y rol)-->
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <input type="file" [(ngModel)]="datoscliente()?.cuenta!.imagenAvatarBASE64" accept="image/*" id="selectorImagen" #inputimagen style="visibility: hidden;" (change)="PrevisualizarImagen(inputimagen)"/>
+                <div class="d-flex justify-content-end">
+                    <button class="text-bg-danger badge p-1" (click)="EliminarImg()" ><i class="fa fa-trash mx-1"></i></button>
+                    <button class="text-bg-primary badge p-1" onclick="javascript: document.getElementById('selectorImagen').click()"><i class="fa fa-plus mx-1"></i></button>
+                </div>
+                <div class="mt-1">
+                    <img class="img img-fluid rounded-circle" [src]="imgSrc || '../../../../assets/img/noicon.png'">
+                </div>
+                <span class="font-weight-bold">{{datoscliente()?.cuenta?.login}}</span>
+                <span class="text-black-50">{{datoscliente()?.cuenta?.email}}</span>
+                <br/>
+                <span class="badge text-bg-dark">Rol favorito</span>
+                <img class="img img-fluid" width="60px" [src]="rolJugador?.img">
+                <span class="font-weight-bold">{{rolJugador?.nombre}}</span>
+            </div>
+        </div>
+        <!--COLUMNA CENTRAL-->
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Datos de Perfil</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label class="labels">Nombre</label>
+                        <input type="text" class="form-control" [(ngModel)]="datoscliente()!.nombre" placeholder="nombre" >
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Apellidos</label>
+                        <input type="text" class="form-control" [(ngModel)]="datoscliente()!.apellidos" placeholder="apellidos">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <label class="labels">Número de Teléfono</label>
+                        <input type="text" class="form-control" [(ngModel)]="datoscliente()!.telefono" placeholder="666112233" >
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Correo Electrónico</label>
+                        <input type="text" class="form-control" [(ngModel)]="datoscliente()?.cuenta!.email" disabled placeholder="ejemplo@riftresults.com" >
+                    </div>
+                    <div class="col-md-12">
+                        <label class="labels">Nick / Login</label>
+                        <input type="text" class="form-control" [(ngModel)]="datoscliente()?.cuenta!.login" placeholder="Nick de cuenta de usuario" >
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label class="labels">País</label>
+                        <input type="text" class="form-control" [(ngModel)]="datoscliente()!.pais" placeholder="País" >
+                    </div>
+                    <div class="col-md-6"><label class="labels">Rol Favorito</label>
+                        <select [(ngModel)]="datoscliente()!.datosLol!.rol" class="form-control" id="rol" required>
+                            @for (rol of roles; track $index) {
+                              <option [value]="rol.nombre" [selected]="rol.nombre == datoscliente()?.datosLol?.rol">{{rol.nombre}}</option>
+                            }
+                          </select>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <span class="{{colorMsg}}">{{msgUpdate}}</span>
+                    <br/>
+                    <button class="mt-2 btn btn-primary btn-azuloscuro" type="button" (click)="ModificarPerfil()">Guardar Perfil</button>
+                </div>
+            </div>
+        </div>
+        <!--COLUMNA DERECHA-->
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Campeones favoritos</span>
+                    <span class="text-bg-dark badge p-1 h6"><i class="fa fa-plus mx-1"></i>Campeón</span>
+                </div>
+                <br>
+                <!-- RENDERIZAR AQUI CADA CAMPEON (máx 5)-->
+                <div class="col-md-12"><label class="labels">Mock Champion 1</label><input type="text" class="form-control" placeholder="experiencia" value=""></div> <br>
+                <div class="col-md-12"><label class="labels">Mock Champion 1</label><input type="text" class="form-control" placeholder="detalles adicionales" value=""></div>
+            </div>
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>Equipos favoritos</span>
+                    <span class="text-bg-dark badge p-1 h6"><i class="fa fa-plus mx-1"></i>Equipo</span>
+                </div>
+                <br>
+                <!-- RENDERIZAR AQUI CADA EQUIPO (máx 5)-->
+                <div class="col-md-12"><label class="labels">Mock Heretics</label><input type="text" class="form-control" placeholder="experiencia" value=""></div> <br>
+                <div class="col-md-12"><label class="labels">Mock Fnatic</label><input type="text" class="form-control" placeholder="detalles adicionales" value=""></div>
+            </div>
+        </div>
+    </div>
+</div>

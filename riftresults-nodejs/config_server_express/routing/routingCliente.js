@@ -11,14 +11,14 @@ async function checkJWT(req,res,next){
     try {
         //extraigo de la peticion, la cabecera "Authorization: Bearer ....jwt..."
         let _jwt=req.headers.authorization.split(' ')[1];
-        console.log('JWT en cabecera mandado por cliente react...', _jwt);
+        console.log('JWT en cabecera mandado por cliente Angular...', _jwt);
 
         const _payload=await jsonwebtoken.verify(_jwt, process.env.JWT_SECRETKEY);
         req.payload=_payload;
         next(); //SI EL TOKEN ES CORRECTO, SE PASA AL SIGUIENTE MOD.MIDDLEWARE (next())
 
     } catch (error) {
-        console.log('error al intentar comprobar el JWT enviado desde el cliente react...', error);
+        console.log('error al intentar comprobar el JWT enviado desde el cliente Angular...', error);
         res.status(401)
             .send(
                  { 
@@ -38,5 +38,7 @@ async function checkJWT(req,res,next){
 router.post('/Registro', clienteController.registro);
 router.post('/ActivarCuenta/:token', clienteController.activarCuenta);
 router.post('/Login', clienteController.login);
+router.get('/RecuperarRoles', clienteController.recuperarRoles);
+router.post('/ModificarPerfil', clienteController.modificarPerfil);
 
 module.exports=router;

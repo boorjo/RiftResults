@@ -52,6 +52,28 @@ export class RestnodeService {
     );
   }
 
+  public RecuperarRoles(){
+    return lastValueFrom(
+      this._httpclient.get<IRestMessage>(
+        'http://localhost:3000/api/Cliente/RecuperarRoles',
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+
+  public ModificarPerfil(datos: ICliente) {
+    return lastValueFrom(
+      this._httpclient.post<IRestMessage>(
+        'http://localhost:3000/api/Cliente/ModificarPerfil', datos,
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+
   //#endregion
 
   //#region ------ metodos para zona Portal ----------
