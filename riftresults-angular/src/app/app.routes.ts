@@ -8,6 +8,7 @@ import { TerminosYPrivacidadComponent } from './components/zonaPortal/terminosSe
 import { CampeonesComponent } from './components/zonaPortal/campeones/campeonesComponent/campeones.component';
 import { PanelClienteComponent } from './components/zonaUsuario/panelClienteComponent/panel-cliente.component';
 import { accesoPerfilGuard } from './servicios_guards/acceso-perfil.guard';
+import { EquiposComponent } from './components/zonaPortal/equipos/equipos.component';
 
 export const routes: Routes = [
   {
@@ -17,7 +18,11 @@ export const routes: Routes = [
       { path: 'Registrook', component: RegistroOKComponent },
       { path: 'Login', component: LoginComponent },
       { path: 'ActivarCuenta/:token', component: CuentaActivaComponent },
-      { path: 'PanelCliente', component: PanelClienteComponent, canActivate: [accesoPerfilGuard] } // <-- solo accesible si logueados meter guard
+      {
+        path: 'PanelCliente',
+               component: PanelClienteComponent,
+               canActivate: [accesoPerfilGuard],  // <-- solo accesible si logueado
+      }
     ]
   },
   {
@@ -25,7 +30,7 @@ export const routes: Routes = [
     children: [
       //{ path: 'paginaInicial', component: PaginaInicialComponent },
       //{ path: 'liga', component: LigaComponent },
-      //{ path: 'equipos', component: EquiposComponent },
+      { path: 'Equipos', component: EquiposComponent },
       { path: 'Campeones', component: CampeonesComponent }
     ]
   },

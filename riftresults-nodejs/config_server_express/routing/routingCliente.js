@@ -40,5 +40,6 @@ router.post('/ActivarCuenta/:token', clienteController.activarCuenta);
 router.post('/Login', clienteController.login);
 router.get('/RecuperarRoles', clienteController.recuperarRoles);
 router.post('/ModificarPerfil', clienteController.modificarPerfil);
+router.post('/CambiarPassword', clienteController.cambiarPassword);
 
 module.exports=router;

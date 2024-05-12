@@ -9,7 +9,6 @@ const mailjetService = new MailjetService();
 async function comprobarCliente(email, login) {
     try {
         let camposExistentes = [];
-        
         // Buscar x email
         const clienteByEmail = await Cliente.findOne({ 'cuenta.email': email });
         if (clienteByEmail) {
@@ -168,7 +167,7 @@ module.exports = {
                 }
 
                 //4º si todo ok... devolver datos del cliente con pedidos y direcciones expandidos (no los _id)
-                //                 devolver token de sesion JWT    
+                //                 devolver token de sesion JWT
                 let _jwt = jsonwebtoken.sign(
                     { nombre: _cliente.nombre, apellidos: _cliente.apellidos, email: _cliente.cuenta.email, idcliente: _cliente._id }, //<--- payload jwt
                     process.env.JWT_SECRETKEY, //<---- clave secreta para firmar jwt y comprobar autenticidad...
@@ -271,7 +270,31 @@ module.exports = {
                 mensaje: 'Error al modificar perfil'
             });
         }
+    },
+    cambiarPassword: async (req, res, next) => {
+        try {
+            const { idcliente, password } = req.body;
+            const _cliente = await Cliente.findById(idcliente);
+            if (!_cliente) {
+                res.status(200).send({
+                    codigo: 1,
+                    mensaje: 'No se ha encontrado el cliente'
+                });
+                return;
+            }
+            _cliente.cuenta.password = bcrypt.hashSync(password, 10);
+            await _cliente.save();
+            res.status(200).send({
+                codigo: 0,
+                mensaje: 'Contraseña cambiada correctamente'
+            });
+        } catch (error) {
+            console.log('Error al cambiar contraseña:', error);
+            res.status(200).send({
+                codigo: 1,
+                mensaje: 'Error al cambiar contraseña'
+            });
+        }
     }
-
 }
 

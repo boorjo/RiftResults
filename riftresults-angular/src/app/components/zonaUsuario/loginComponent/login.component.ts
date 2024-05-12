@@ -24,13 +24,13 @@ export class LoginComponent {
   public msgError:string="";
 
   constructor(private router:Router,
-    private restNodeSvc:RestnodeService,
-    @Inject(TOKEN_SERVICIOSTORAGE) private storageSvc:IStorageService ){
-      this.formLogin = new FormGroup({
-        email: new FormControl('', [ Validators.required, Validators.email ] ),
-        password: new FormControl('',[ Validators.required, Validators.minLength(5), Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$')] )
-      });
-    }
+              private restNodeSvc:RestnodeService,
+              @Inject(TOKEN_SERVICIOSTORAGE) private storageSvc:IStorageService ){
+                this.formLogin = new FormGroup({
+                  email: new FormControl('', [ Validators.required, Validators.email ] ),
+                  password: new FormControl('',[ Validators.required, Validators.minLength(5), Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$')] )
+                });
+              }
 
     async Login(){
       const formData = this.formLogin.value;

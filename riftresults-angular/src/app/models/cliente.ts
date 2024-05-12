@@ -19,4 +19,5 @@ export interface ICliente {
         equipos?:       Array<string>;
         campeones?:     Array<ICampeon>;
     }
+    _id?:       string;
 }

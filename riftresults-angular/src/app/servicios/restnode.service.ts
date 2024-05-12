@@ -74,9 +74,31 @@ export class RestnodeService {
     );
   }
 
+  public CambiarPassword(datos: {idcliente: string; password: string;}){
+    return lastValueFrom(
+      this._httpclient.post<IRestMessage>(
+        'http://localhost:3000/api/Cliente/CambiarPassword', datos,
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+
   //#endregion
 
   //#region ------ metodos para zona Portal ----------
+
+  public RecuperarEquipos(){
+    return lastValueFrom(
+      this._httpclient.get<IRestMessage>(
+        'http://localhost:3000/api/Portal/RecuperarEquipos',
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
 
   //#endregion
 }

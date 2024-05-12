@@ -5,13 +5,20 @@ import { TOKEN_SERVICIOSTORAGE } from '../../../servicios/injectiontokenstorages
 import { IRestMessage } from '../../../models/restmessage';
 import { RestnodeService } from '../../../servicios/restnode.service';
 import { IRol } from '../../../models/rol';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { lastValueFrom } from 'rxjs';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
+import { compareToValidator } from '../../../validators/compareTo';
 
 @Component({
   selector: 'app-panel-cliente',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    RouterOutlet,
+    RouterLink,
+  ],
   templateUrl: './panel-cliente.component.html',
   styleUrl: './panel-cliente.component.css',
 })
@@ -25,15 +32,23 @@ export class PanelClienteComponent implements OnInit {
   public imgSrc : string = "";
   private _fichImagen!: File;
 
+  public formPassword: FormGroup;
+
   constructor(
     @Inject(TOKEN_SERVICIOSTORAGE) private storageSvc: IStorageService,
-    private restNodeSvc: RestnodeService
-  ) {}
+    private restNodeSvc: RestnodeService,
+
+  ) {
+    this.formPassword = new FormGroup({
+      passwordActual: new FormControl('', [Validators.required, Validators.minLength(5), Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$')]),
+      password: new FormControl('', [Validators.required, Validators.minLength(5), Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$')]),
+      repassword: new FormControl('', [Validators.required, Validators.minLength(5), Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{5,}$'), compareToValidator('password')])
+    });
+  }
 
   async ngOnInit() {
     this.datoscliente.update(() => this.storageSvc.RecuperarDatosCliente());
-    console.log('Datos cliente...', this.datoscliente());
-  
+    //console.log('Datos cliente...', this.datoscliente());
     const _resp: IRestMessage = await this.restNodeSvc.RecuperarRoles();
     console.log('_resp...', _resp);
     if (_resp.codigo === 0) {
@@ -75,6 +90,24 @@ export class PanelClienteComponent implements OnInit {
     this.msgUpdate = _resp.mensaje;
     this.colorMsg = _resp.codigo === 0 ? 'text-success' : 'text-danger';
   }
-  
 
+  async CambiarPassword(){
+    console.log('Cambiando password...');
+    //primero hacer un login para comprobar q la password actual sea correcta, despues cambiarla
+    const credenciales = {email: this.datoscliente()!.cuenta.email, password: this.formPassword.value.passwordActual};
+    const _resp = await this.restNodeSvc.LoginCliente(credenciales);
+    console.log('Respuesta al "login"...', _resp);
+    if(_resp.codigo===0){
+      //cambiar password
+      const idcliente = this.datoscliente()!._id || "";
+      const datos = {idcliente: idcliente, password: this.formPassword.value.password};
+      const _resp2 = await this.restNodeSvc.CambiarPassword(datos);
+      console.log('Respuesta al cambiar password...', _resp2);
+      this.msgUpdate = _resp2.mensaje;
+      this.colorMsg = _resp2.codigo === 0 ? 'text-success' : 'text-danger';
+    }else{
+      this.msgUpdate = _resp.mensaje;
+      this.colorMsg = 'text-danger';
+    }
+  }
 }
