@@ -46,30 +46,33 @@
     </table>
 
     <!-- Modal -->
-<div id="modalEquipo" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content" style="background-color: rgb(1, 17, 40); color: white;">
-      <div class="modal-header">
-        <button type="button" class="btn btn-light fa fa-close" data-bs-dismiss="modal"></button>
-        <button type="button" class="btn btn-light fa fa-arrow-left" (click)="mostrarEquipoAnterior()"></button>
-        <h4 class="modal-title">{{ equipoSeleccionado?.Name }}</h4>
-        <button type="button" class="btn btn-light fa fa-arrow-right" (click)="mostrarEquipoSiguiente()"></button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <h5>{{ equipoSeleccionado?.ShortName }}</h5>
-            <p><strong>Activo:</strong> {{ equipoSeleccionado?.Active ? 'Sí' : 'No' }}</p>
-            <p><strong>Tipo:</strong> {{ equipoSeleccionado?.Type }}</p>
-            <p><strong>Sitio Web: </strong> <a href="{{ equipoSeleccionado?.Website }}" target="_blank">{{ equipoSeleccionado?.Website }}</a></p>
+    <div id="modalEquipo" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content" style="background-color: rgb(1, 17, 40); color: white;">
+          <div class="modal-header">
+            <button type="button" class="btn btn-light fa fa-close" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn btn-light fa fa-arrow-left" (click)="mostrarEquipoAnterior()"></button>
+            <h4 class="modal-title">{{ equipoSeleccionado?.Name }}</h4>
+            <button type="button" class="btn btn-light fa fa-arrow-right" (click)="mostrarEquipoSiguiente()"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <h5>{{ equipoSeleccionado?.ShortName }}</h5>
+                <p><strong>Activo:</strong> {{ equipoSeleccionado?.Active ? 'Sí' : 'No' }}</p>
+                <p><strong>Tipo:</strong> {{ equipoSeleccionado?.Type }}</p>
+                <p><strong>Sitio Web: </strong> <a href="{{ equipoSeleccionado?.Website }}" target="_blank">{{ equipoSeleccionado?.Website }}</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-default btn-light" (click)="handleFavorito(equipoSeleccionado!.TeamId)">
+              <img width="20px" src="{{corazonLleno() ? '../../../../../assets/img/heart-circle-minus-solid.png' : '../../../../../assets/img/heart-circle-plus-solid.png' }}">
+            </button>
+            <button type="button" class="btn btn-default btn-light" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default btn-light" data-bs-dismiss="modal">Cerrar</button>
-      </div>
     </div>
-  </div>
-</div>
 
 </div>

@@ -100,5 +100,61 @@ export class RestnodeService {
     );
   }
 
+  public GetEquiposPorId(ids: number[]){
+    return lastValueFrom(
+      this._httpclient.post<IRestMessage>(
+        'http://localhost:3000/api/Portal/GetEquiposPorId',
+         ids,
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+
+  public AddEquipoFavorito(idcliente: string, idequipo: number){
+    return lastValueFrom(
+      this._httpclient.post<IRestMessage>(
+        'http://localhost:3000/api/Portal/AddEquipoFavorito', {idcliente, idequipo},
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+
+  public EliminarEquipoFavorito(idcliente: string, idequipo: number){
+    return lastValueFrom(
+      this._httpclient.post<IRestMessage>(
+        'http://localhost:3000/api/Portal/EliminarEquipoFavorito', {idcliente, idequipo},
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+
+  public AddCampeonFavorito(idcliente: string, idcampeon: string){
+    return lastValueFrom(
+      this._httpclient.post<IRestMessage>(
+        'http://localhost:3000/api/Portal/AddCampeonFavorito', {idcliente, idcampeon},
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+
+  public EliminarCampeonFavorito(idcliente: string, idcampeon: string){
+    return lastValueFrom(
+      this._httpclient.post<IRestMessage>(
+        'http://localhost:3000/api/Portal/EliminarCampeonFavorito', {idcliente, idcampeon},
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+
   //#endregion
 }

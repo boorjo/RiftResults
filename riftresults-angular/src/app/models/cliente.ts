@@ -1,4 +1,5 @@
 import { ICampeon } from "./campeon";
+import { IEquipo } from "./equipo";
 
 export interface ICliente {
     nombre:     string;
@@ -16,8 +17,10 @@ export interface ICliente {
     pais:       string;
     datosLol: {
         rol:    string;
-        equipos?:       Array<string>;
+        equipos?:       Array<IEquipo>;
         campeones?:     Array<ICampeon>;
+        equiposId?:     Array<number>;
+        campeonesId?:   Array<string>;
     }
     _id?:       string;
 }

@@ -17,8 +17,10 @@ const clienteSchema = new mongoose.Schema(
         pais: { type: String, required: [true, '* País obligatorio'], maxLength: [50, '* Máxima longitud para país 50 caracteres'] },
         datosLol: {
             rol: { type: String, required: [true, '* Rol obligatorio'], maxLength: [50, '* Máxima longitud para rol 50 caracteres'] },
-            equipos: [{ nombre: String, liga: String, division: String }],
-            campeones: [ {nombre: String, titulo:String, descripcion: String, rol:String, imagen: String}]
+            //equipos: [{ nombre: String, liga: String, division: String }],
+            equiposId: [Number],
+            //campeones: [ {nombre: String, titulo:String, descripcion: String, rol:String, imagen: String}],
+            campeonesId: [String]
         }
     }
 );

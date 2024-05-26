@@ -41,7 +41,6 @@ import { ICampeon, ICampeonAPI } from '../models/campeon';
 export class ApicampeonesService {
 
   //private apiUrl = 'https://ddragon.leagueoflegends.com/cdn/12.4.1/data/en_US/champion.json';
-  //en ESP: problema para mapear las img.. lo dejamos en ingles
   private apiUrl = 'https://ddragon.leagueoflegends.com/cdn/12.4.1/data/es_ES/champion.json';
 
   constructor(private _httpclient: HttpClient) { }
@@ -57,4 +56,11 @@ export class ApicampeonesService {
       })
     );
   }
+
+  getCampeonesPorId(ids: string[]): Observable<ICampeon[]>{ //la id es = que el name en la API.
+    return this.getAPICampeones().pipe(
+      map(campeones => campeones.filter(campeon => ids.includes(campeon.name)))
+    );
+  }
+
 }

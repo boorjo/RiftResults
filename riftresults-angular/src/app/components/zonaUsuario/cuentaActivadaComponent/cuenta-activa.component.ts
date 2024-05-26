@@ -1,16 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { RestnodeService } from '../../../servicios/restnode.service';
 
 @Component({
   selector: 'app-cuenta-activa',
   standalone: true,
-  imports: [],
+  imports: [
+            RouterOutlet,
+            RouterLink,
+           ],
   templateUrl: './cuenta-activa.component.html',
   styleUrl: './cuenta-activa.component.css'
 })
 export class CuentaActivaComponent implements OnInit {
-  constructor(private route: ActivatedRoute, private restSvc: RestnodeService) {
+  constructor(private route: ActivatedRoute, private restSvc: RestnodeService,
+              private router: Router
+  ) {
     
   }
   

@@ -16,7 +16,7 @@ configServer(serverExpress);
 //------------ conexion al servidor MONGODB----------
 mongoose.connect(process.env.CONNECTION_MONGODB)
         .then(
-            ()=> console.log('...conexion al servidor de BD mongo establecido de forma correcta....')
+            ()=> console.log('...conexion al servidor de BD mongo establecida de forma correcta...')
         )
         .catch(
           (err) => console.log('fallo al conectarnos al sevidor de bd de mongo:', err)  

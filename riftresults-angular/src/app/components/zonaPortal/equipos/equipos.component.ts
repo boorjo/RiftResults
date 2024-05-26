@@ -1,10 +1,12 @@
-import { Component, Inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { IEquipo } from '../../../models/equipo';
 import { RestnodeService } from '../../../servicios/restnode.service';
 import { from } from 'rxjs';
 import { IRestMessage } from '../../../models/restmessage';
 import { TOKEN_SERVICIOSTORAGE } from '../../../servicios/injectiontokenstorageservice';
 import { IStorageService } from '../../../models/interfacestorage';
+import { accesoPerfilGuard } from '../../../servicios_guards/acceso-perfil.guard';
+import { ICliente } from '../../../models/cliente';
 
 @Component({
   selector: 'app-equipos',
@@ -20,13 +22,19 @@ export class EquiposComponent implements OnInit {
   areaSeleccionada: string = '';
   equipoSeleccionado: IEquipo | null = null;
   indiceEquipoSeleccionado: number = 0;
+  corazonLleno = signal<boolean>(false);
+  maxEquipos: number = 3;
+  datoscliente: ICliente | null = null;
+
 
   constructor(private restNodeSvc: RestnodeService,
-            @Inject(TOKEN_SERVICIOSTORAGE) private storageSvc:IStorageService
+            @Inject(TOKEN_SERVICIOSTORAGE) private storageSvc:IStorageService,
+            private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadEquipos();
+    this.datoscliente = this.storageSvc.RecuperarDatosCliente();
   }
 
     async loadEquipos() {
@@ -87,4 +95,36 @@ export class EquiposComponent implements OnInit {
       this.mostrarDetalleEquipo(this.equiposFiltrados()[this.indiceEquipoSeleccionado]);
     }
   }
+
+  handleFavorito(teamId: number): void {
+    if (this.datoscliente && this.datoscliente.datosLol && this.datoscliente.datosLol.equiposId) {
+      const estaEnLaLista = this.datoscliente.datosLol.equiposId.includes(teamId | 0);
+      if (estaEnLaLista) {
+        const index = this.datoscliente.datosLol.equiposId.indexOf(teamId);
+        if (index > -1) {
+          this.datoscliente.datosLol.equiposId.splice(index, 1);
+          this.restNodeSvc.EliminarEquipoFavorito(this.datoscliente._id || '', teamId);
+          this.storageSvc.AlmacenarDatosCliente(this.datoscliente);
+          console.log('Datos de cliente a almacenar..', this.datoscliente);
+        }
+        this.corazonLleno.update(() => false);
+      } else {
+        if(this.datoscliente.datosLol.equiposId.length < this.maxEquipos){
+            this.datoscliente.datosLol.equiposId.push(teamId);
+            this.corazonLleno.update(() => true);
+            this.restNodeSvc.AddEquipoFavorito(this.datoscliente._id || '', teamId);
+            this.storageSvc.AlmacenarDatosCliente(this.datoscliente);
+            console.log('Datos de cliente a almacenar..', this.datoscliente);
+        }else{
+          console.log('No se pueden añadir más de 3 equipos');
+        }
+      }
+      this.cdr.detectChanges();
+    } else {
+      console.log('Usuario no logeado');
+    }
+  }
+
+
+
 }

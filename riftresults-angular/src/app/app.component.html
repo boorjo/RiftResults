@@ -23,6 +23,9 @@
               <a class="nav-link" [routerLink]="['/Inicio/Campeones']" routerLinkActive="router-link-active">CAMPEONES</a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" [routerLink]="['/Inicio/Foro']" routerLinkActive="router-link-active">FORO</a>
+            </li>
+            <li class="nav-item">
               <form class="form-inline d-flex flex-row form-control-sm">
                 <input class="form-control mr-sm-2 form-control-sm" type="search" placeholder="Buscar" aria-label="Buscar" />
                 <button class="btn btn-outline-secondary my-2 my-sm-0 d-flex" type="submit">
@@ -32,12 +35,11 @@
             </li>
           </ul>
         </div>
-        
+
       </nav>
       <div class="col align-items-end">
         <!-- si hay un objeto sesion CLIENTE muestro el boton con su email y nombre y apellidos para q acceda a su PANEL, sino al LOGIN-->
         @if ( this.datoscliente() ) {
-          
         <a [routerLink]="['/Cliente/PanelCliente']" routerLinkActive="router-link-active"
           class="btn bg-negro btn-sm">
           <i class="fa fa-light fa-user mx-2 my-1 text-white-50 ablanco"></i>
@@ -61,7 +63,7 @@
             class="nav-link text-white-50 d-flex ablanco">
               Iniciar sesión
               <i class="fa fa-light fa-user mx-2 my-1"></i>
-            </a> 
+            </a>
           </div>
         }
 
@@ -89,7 +91,4 @@
       </div>
     </div>
   </footer>
-  
-
-
 </div>

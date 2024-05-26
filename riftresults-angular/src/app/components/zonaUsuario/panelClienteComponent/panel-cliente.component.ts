@@ -9,6 +9,8 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { lastValueFrom } from 'rxjs';
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { compareToValidator } from '../../../validators/compareTo';
+import { IEquipo } from '../../../models/equipo';
+import { ICampeon } from '../../../models/campeon';
 
 @Component({
   selector: 'app-panel-cliente',
@@ -50,7 +52,7 @@ export class PanelClienteComponent implements OnInit {
     this.datoscliente.update(() => this.storageSvc.RecuperarDatosCliente());
     //console.log('Datos cliente...', this.datoscliente());
     const _resp: IRestMessage = await this.restNodeSvc.RecuperarRoles();
-    console.log('_resp...', _resp);
+    //console.log('_resp...', _resp);
     if (_resp.codigo === 0) {
       this.roles = _resp.otrosdatos!;
       this.rolJugador = this.roles.find(
@@ -73,10 +75,8 @@ export class PanelClienteComponent implements OnInit {
         this.datoscliente()!.cuenta!.imagenAvatarBASE64 = this.imgSrc;
       }
     });
-  
     _lector.readAsDataURL(this._fichImagen);
   }
-  
 
   public EliminarImg(){
     this.imgSrc = "";
@@ -110,4 +110,30 @@ export class PanelClienteComponent implements OnInit {
       this.colorMsg = 'text-danger';
     }
   }
+
+  eliminarCampeon(campeon: ICampeon): void {
+    const indexCampeon = this.datoscliente()?.datosLol?.campeones?.findIndex(c => c.name === campeon.name);
+    const indexCampeonId = this.datoscliente()?.datosLol?.campeonesId?.indexOf(campeon.name);
+    if (indexCampeon !== undefined && indexCampeon > -1) {
+      this.datoscliente()?.datosLol?.campeones?.splice(indexCampeon, 1);
+    }
+    if (indexCampeonId !== undefined && indexCampeonId > -1) {
+      this.datoscliente()?.datosLol?.campeonesId?.splice(indexCampeonId, 1);
+      console.log('datoscliente tras borrar campeon...', this.datoscliente());
+    }
+}
+
+eliminarEquipo(equipo: IEquipo): void {
+    const indexEquipo = this.datoscliente()?.datosLol?.equipos?.findIndex(e => e.TeamId === equipo.TeamId);
+    const indexEquipoId = this.datoscliente()?.datosLol?.equiposId?.indexOf(equipo.TeamId);
+    if (indexEquipo !== undefined && indexEquipo > -1) {
+      this.datoscliente()?.datosLol?.equipos?.splice(indexEquipo, 1);
+    }
+    if (indexEquipoId !== undefined && indexEquipoId > -1) {
+      this.datoscliente()?.datosLol?.equiposId?.splice(indexEquipoId, 1);
+      console.log('datoscliente tras borrar equipo...', this.datoscliente());
+    }
+}
+
+
 }

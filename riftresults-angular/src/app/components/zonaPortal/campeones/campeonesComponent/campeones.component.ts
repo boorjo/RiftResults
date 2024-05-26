@@ -1,7 +1,11 @@
-import { Component, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { ICampeon } from '../../../../models/campeon';
 import { ApicampeonesService } from '../../../../servicios/apicampeones.service';
 import Chart from 'chart.js/auto';
+import { ICliente } from '../../../../models/cliente';
+import { RestnodeService } from '../../../../servicios/restnode.service';
+import { TOKEN_SERVICIOSTORAGE } from '../../../../servicios/injectiontokenstorageservice';
+import { IStorageService } from '../../../../models/interfacestorage';
 
 @Component({
   selector: 'app-campeones',
@@ -17,13 +21,21 @@ export class CampeonesComponent implements OnInit {
   campeonSeleccionado: ICampeon | null = null;
   indiceCampeonSeleccionado: number = 0;
   radarChart: any;
+  corazonLleno = signal<boolean>(false);
+  datoscliente: ICliente | null = null;
+  maxCampeones: number = 5;
 
   @ViewChild('radarCanvas') radarCanvas: any;
 
-  constructor(private campeonesSvc: ApicampeonesService) {}
+  constructor(private campeonesSvc: ApicampeonesService,
+              private restNodeSvc: RestnodeService,
+              @Inject(TOKEN_SERVICIOSTORAGE) private storageSvc:IStorageService,
+              private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadCampeones();
+    this.datoscliente = this.storageSvc.RecuperarDatosCliente();
   }
 
   loadCampeones(): void {
@@ -56,7 +68,7 @@ export class CampeonesComponent implements OnInit {
         // Si no se ha seleccionado ningún rol, mostramos todos los campeones
         this.campeonesFiltrados.update(() => this.campeones);
     } else {
-        this.campeonesFiltrados.update(() => this.campeones.filter(campeon => 
+        this.campeonesFiltrados.update(() => this.campeones.filter(campeon =>
             campeon.tags.some(tag => tag.toLowerCase() === this.rolSeleccionado)
         ));
         console.log('Campeones filtrados por rol... ', this.rolSeleccionado, this.campeonesFiltrados());
@@ -87,13 +99,13 @@ export class CampeonesComponent implements OnInit {
     const stats = this.campeonSeleccionado?.stats;
     const labels = ['HP', 'MP', 'Vel. Movimiento', 'Armadura', 'Rango', 'Daño', 'Vel. Ataque'];
     const data = [
-      stats?.hp, 
-      stats?.mp, 
-      stats?.movespeed, 
-      (stats?.armor ?? 0) * 10, 
-      stats?.attackrange, 
-      (stats?.attackdamage ?? 0) * 5, // Multiplica el daño por 5
-      (stats?.attackspeed ?? 0) * 500  // Multiplica la velocidad de ataque por 500
+      stats?.hp,
+      stats?.mp,
+      stats?.movespeed,
+      (stats?.armor ?? 0) * 10,
+      stats?.attackrange,
+      (stats?.attackdamage ?? 0) * 5,
+      (stats?.attackspeed ?? 0) * 500
     ];
 
     // Obtén los valores máximos y mínimos para cada estadística
@@ -149,5 +161,33 @@ export class CampeonesComponent implements OnInit {
       });
     }
   }
-  
+
+  handleFavoritoCampeon(campeonId: string): void {
+    if (this.datoscliente && this.datoscliente.datosLol && this.datoscliente.datosLol.campeonesId) {
+      const estaEnLaLista = this.datoscliente.datosLol.campeonesId.includes(campeonId);
+      if (estaEnLaLista) {
+        const index = this.datoscliente.datosLol.campeonesId.indexOf(campeonId);
+        if (index > -1) {
+          this.datoscliente.datosLol.campeonesId.splice(index, 1);
+          this.restNodeSvc.EliminarCampeonFavorito(this.datoscliente._id || '', campeonId);
+          this.storageSvc.AlmacenarDatosCliente(this.datoscliente);
+          console.log('Datos de cliente a almacenar..', this.datoscliente);
+        }
+        this.corazonLleno.update(() => false);
+      } else {
+        if(this.datoscliente.datosLol.campeonesId.length < this.maxCampeones){
+            this.datoscliente.datosLol.campeonesId.push(campeonId);
+            this.corazonLleno.update(() => true);
+            this.restNodeSvc.AddCampeonFavorito(this.datoscliente._id || '', campeonId);
+            this.storageSvc.AlmacenarDatosCliente(this.datoscliente);
+            console.log('Datos de cliente a almacenar..', this.datoscliente);
+        }else{
+          console.log('No se pueden añadir más de 5 campeones');
+        }
+      }
+      this.cdr.detectChanges();
+    } else {
+      console.log('Usuario no logeado');
+    }
+  }
 }

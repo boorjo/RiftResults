@@ -76,27 +76,36 @@
         </div>
         <!--COLUMNA DERECHA-->
         <div class="col-md-4">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center">
-                    <span>Campeones favoritos</span>
-                    <a [routerLink]="['/Inicio/Campeones']" routerLinkActive="router-link-active"><span class="text-bg-dark badge p-1 h6"><i class="fa fa-plus mx-1"></i>Campeón</span></a>
-                </div>
-                <br>
-                <!-- RENDERIZAR AQUI CADA CAMPEON (máx 5)-->
-                <div class="col-md-12"><label class="labels">Mock Champion 1</label><input type="text" class="form-control" placeholder="experiencia" value=""></div> <br>
-                <div class="col-md-12"><label class="labels">Mock Champion 1</label><input type="text" class="form-control" placeholder="detalles adicionales" value=""></div>
-            </div>
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center">
-                    <span>Equipos favoritos</span>
-                    <a [routerLink]="['/Inicio/Equipos']" routerLinkActive="router-link-active"><span class="text-bg-dark badge p-1 h6"><i class="fa fa-plus mx-1"></i>Equipo</span></a>
-                </div>
-                <br>
-                <!-- RENDERIZAR AQUI CADA EQUIPO (máx 5)-->
-                <div class="col-md-12"><label class="labels">Mock Heretics</label><input type="text" class="form-control" placeholder="experiencia" value=""></div> <br>
-                <div class="col-md-12"><label class="labels">Mock Fnatic</label><input type="text" class="form-control" placeholder="detalles adicionales" value=""></div>
-            </div>
-        </div>
+          <div class="p-3 py-5">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span>Campeones favoritos</span> <!-- MAXIMO 5 -->
+                  <a [routerLink]="['/Inicio/Campeones']" routerLinkActive="router-link-active"><span class="text-bg-dark badge p-1 h6"><i class="fa fa-plus mx-1"></i>Campeón</span></a>
+              </div>
+              <ul class="list-group">
+                  @for (campeon of datoscliente()?.datosLol?.campeones; track campeon.name) {
+                      <li class="list-group-item list-group-item-dark d-flex justify-content-between align-items-center">
+                          <span>{{campeon.name}}</span>
+                          <i class="fa fa-times" aria-hidden="true" (click)="eliminarCampeon(campeon)"></i>
+                      </li>
+                  }
+              </ul>
+          </div>
+          <div class="p-3 py-5">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span>Equipos favoritos</span>  <!-- MAXIMO 3 -->
+                  <a [routerLink]="['/Inicio/Equipos']" routerLinkActive="router-link-active"><span class="text-bg-dark badge p-1 h6"><i class="fa fa-plus mx-1"></i>Equipo</span></a>
+              </div>
+              <ul class="list-group">
+                  @for (equipo of datoscliente()?.datosLol?.equipos; track equipo.TeamId) {
+                      <li class="list-group-item list-group-item-dark d-flex justify-content-between align-items-center">
+                          <span>{{equipo.Name}}</span>
+                          <i class="fa fa-times" aria-hidden="true" (click)="eliminarEquipo(equipo)"></i>
+                      </li>
+                  }
+              </ul>
+          </div>
+      </div>
+
     </div>
 <!-- #region MODAL CAMBIAR CONTRASEÑA -->
     <div class="modal fade" id="cambiarPasswordModal" tabindex="-1" aria-labelledby="cambiarPasswordModalLabel" aria-hidden="true">
@@ -164,5 +173,5 @@
         </div>
     </div>
   </div>
-  <!-- #endregion --> 
+  <!-- #endregion -->
 </div>

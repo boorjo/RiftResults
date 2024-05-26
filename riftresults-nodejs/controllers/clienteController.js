@@ -256,7 +256,7 @@ module.exports = {
             _cliente.telefono = cliente.telefono;
             _cliente.pais = cliente.pais;
             _cliente.cuenta.imagenAvatarBASE64 = cliente.cuenta.imagenAvatarBASE64;
-            _cliente.datosLol.rol = cliente.datosLol.rol;
+            _cliente.datosLol = cliente.datosLol;
             await _cliente.save();
             res.status(200).send({
                 codigo: 0,

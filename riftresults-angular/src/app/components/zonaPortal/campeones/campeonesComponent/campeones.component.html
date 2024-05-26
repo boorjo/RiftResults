@@ -85,9 +85,13 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default btn-light" (click)="handleFavoritoCampeon(campeonSeleccionado!.name)">
+          <img width="20px" src="{{corazonLleno() ? '../../../../../assets/img/heart-circle-minus-solid.png' : '../../../../../assets/img/heart-circle-plus-solid.png' }}">
+        </button>
         <button type="button" class="btn btn-default btn-light" data-bs-dismiss="modal">Cerrar</button>
       </div>
+      
     </div>
   </div>
 </div>
