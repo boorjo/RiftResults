@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ICliente } from '../models/cliente';
 import { IRestMessage } from '../models/restmessage';
 import { lastValueFrom } from 'rxjs';
+import { IPublicacion } from '../models/publicacion';
 
 @Injectable({
   providedIn: 'root',
@@ -155,6 +156,33 @@ export class RestnodeService {
       )
     );
   }
+
+      //#region ------ metodos para FORO ----------
+      public guardarPublicacion(publicacion: IPublicacion){
+            return lastValueFrom(
+              this._httpclient.post<IRestMessage>(
+                'http://localhost:3000/api/Portal/Foro/GuardarPublicacion', publicacion,
+                {
+                  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+                }
+              )
+            );
+          }
+
+      public obtenerPublicaciones(categoria: string = 'todo') {
+          return lastValueFrom(
+              this._httpclient.get<IRestMessage>(
+                  `http://localhost:3000/api/Portal/Foro/ObtenerPublicaciones?categoria=${categoria}`,
+                  {
+                      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+                  }
+              )
+          );
+      }
+
+
+      //#endregion
+
 
   //#endregion
 }

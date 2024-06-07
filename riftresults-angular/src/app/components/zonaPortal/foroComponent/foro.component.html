@@ -1,0 +1,137 @@
+<div class="container mt-2 bg-body-secondary p-3 rounded">
+    <h1 class="text-center m-4">FORO RIFT RESULTS</h1>
+    <h2 class="text-center mb-4">Categorías</h2>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-azuloscuro btn-primary mx-auto" type="button" data-bs-toggle="collapse" data-bs-target="#listaCategorias" aria-expanded="false" aria-controls="listaCategorias">
+        Mostrar/Ocultar Categorías
+        </button>
+    </div>
+
+    <div class="collapse mt-2" id="listaCategorias">
+      <div class="list-group col-6 mx-auto">
+        <label class="list-group-item">
+          <input type="radio" name="categoria" checked value="todo" (change)="cambiarCategoria('todo')">
+          Todas las publicaciones
+        </label>
+        <label class="list-group-item">
+          <input type="radio" name="categoria" value="competitivo" (change)="cambiarCategoria('competitivo')">
+          Competitivo
+        </label>
+        <label class="list-group-item">
+            <input type="radio" name="categoria" value="gameplay" (change)="cambiarCategoria('gameplay')">
+            Gameplay
+          </label>
+          <label class="list-group-item">
+            <input type="radio" name="categoria" value="social" (change)="cambiarCategoria('social')">
+            Social
+          </label>
+          <label class="list-group-item">
+            <input type="radio" name="categoria" value="noticias" (change)="cambiarCategoria('noticias')">
+            Noticias
+          </label>
+      </div>
+    </div>
+    
+    <!-- MODAL NUEVA PUBLICACIÓN -->
+    <div class="d-flex justify-content-center my-4">
+      <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modalNuevaPublicacion">
+          Nueva Publicación
+      </button>
+    </div>
+    <!-- comprobar q esté logeado, si no mostrar modal/alert "Debes iniciar sesión para poder publicar en el foro"-->
+    @if(this.datoscliente() !== null){
+      <div id="modalNuevaPublicacion" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: rgb(1, 17, 40); color: white;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear Nueva Publicación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+  <form [formGroup]="formPublicacion" (ngSubmit)="publicarPost()">
+    <div class="mb-3">
+      <label for="categoria" class="form-label">Categoría</label>
+      <select class="form-select" formControlName="categoria">
+        <option value="todo">Todas las publicaciones</option>
+        <option value="competitivo">Competitivo</option>
+        <option value="gameplay">Gameplay</option>
+        <option value="social">Social</option>
+        <option value="noticias">Noticias</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="titulo" class="form-label">Título</label>
+      <input type="text" class="form-control" formControlName="titulo">
+      @if (formPublicacion.controls['titulo'].errors?.['required'] && formPublicacion.controls['titulo'].touched) {
+        <span class="text-danger">* El título es requerido.</span>
+      }
+      @if (formPublicacion.controls['titulo'].errors?.['minlength'] && formPublicacion.controls['titulo'].touched) {
+        <span class="text-danger">* El título debe tener al menos 3 letras.</span>
+      }
+    </div>
+    <div class="mb-3">
+      <label for="contenido" class="form-label">Contenido</label>
+      <textarea class="form-control" formControlName="contenido" rows="5"></textarea>
+      @if (formPublicacion.controls['contenido'].errors?.['required'] && formPublicacion.controls['contenido'].touched) {
+        <span class="text-danger">* El contenido es requerido.</span>
+      }
+      @if (formPublicacion.controls['contenido'].errors?.['minlength'] && formPublicacion.controls['contenido'].touched) {
+        <span class="text-danger">* El contenido debe tener al menos 20 letras.</span>
+      }
+    </div>
+    <div class="modal-footer justify-content-between">
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      <button type="submit" class="btn btn-primary">Publicar</button>
+    </div>
+  </form>
+</div>
+            </div>
+        </div>
+      </div>
+    } @else {
+      <div class="alert alert-danger" role="alert">
+          Debes iniciar sesión para poder publicar en el foro.
+      </div>
+    }
+
+
+    <!-- si tarda en cargar meter spinner s-->
+    <div class="publicaciones-container">
+      @for (publicacion of publicaciones() ; track publicacion._id) {
+        <div class="publicacion-card mb-3">
+          <div class="card">
+            <div class="card-header">
+              {{ publicacion.categoria }}
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ publicacion.titulo }}</h5>
+              <p class="card-text">{{ publicacion.contenido }}</p>
+              <p class="card-text"><small class="text-muted">Publicado el {{ publicacion.fecha }}</small></p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+
+    <!-- Modal de éxito -->
+    <div class="modal fade" #modalExitoRef id="modalExito" tabindex="-1" role="dialog" aria-labelledby="modalExitoLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalExitoLabel">Publicación Guardada</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Tu publicación se ha guardado con éxito.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" data-dismiss="modal">Genial</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>

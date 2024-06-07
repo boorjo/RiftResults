@@ -9,6 +9,7 @@ import { CampeonesComponent } from './components/zonaPortal/campeones/campeonesC
 import { PanelClienteComponent } from './components/zonaUsuario/panelClienteComponent/panel-cliente.component';
 import { accesoPerfilGuard } from './servicios_guards/acceso-perfil.guard';
 import { EquiposComponent } from './components/zonaPortal/equipos/equipos.component';
+import { ForoComponent } from './components/zonaPortal/foroComponent/foro.component';
 
 export const routes: Routes = [
   {
@@ -31,9 +32,10 @@ export const routes: Routes = [
       //{ path: 'paginaInicial', component: PaginaInicialComponent },
       //{ path: 'liga', component: LigaComponent },
       { path: 'Equipos', component: EquiposComponent },
-      { path: 'Campeones', component: CampeonesComponent }
+      { path: 'Campeones', component: CampeonesComponent },
+      { path: 'Foro', component: ForoComponent }
     ]
   },
-    { path: '', component:InicioComponent }, //ruta raiz al arrancar! 
+    { path: '', component:InicioComponent }, //ruta raiz al arrancar!
     { path: 'TerminosYPrivacidad', component: TerminosYPrivacidadComponent}
 ];

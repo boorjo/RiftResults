@@ -1,5 +1,6 @@
 const axios = require('axios');
 var Cliente = require('../modelos/cliente');
+var Publicacion = require('../modelos/publicacion');
 
 module.exports = {
     recuperarEquipos: async (req, res, next) => {
@@ -159,6 +160,54 @@ module.exports = {
                 otrosdatos: null
             });
         }
-    }
+    },
+    guardarPublicacion: async (req, res, next) => {
+        try {
+            const publicacion = req.body;
+            console.log('Req.body en guardarPublicacion...', req.body);
+            if(publicacion.categoria === 'todo'){
+                publicacion.categoria = 'social';
+            }
+            var _resultInsertPubli = await new Publicacion(publicacion).save();
+            console.log('Resultado de insertar publicación en mongo...', _resultInsertPubli);
+
+            res.status(200).send({
+                codigo: 0,
+                mensaje: 'Publicación guardada correctamente',
+            });
+        } catch (error) {
+            console.log('error al hacer el insert en coleccion clientes...', error);
+            res.status(200).send(
+                {
+                    codigo: 1,
+                    mensaje: `error a la hora de insertar la publicación... ${JSON.stringify(error)}`
+                }
+
+            );
+        }
+    },
+    obtenerPublicaciones: async (req, res, next) => {
+        try {
+            const categoria = req.query.categoria; // Obtiene la categoría de la query string si existe
+            let filtro = {};
+            if (categoria && categoria !== 'todo') {
+                filtro = { categoria }; // Filtra por categoría si se especifica una y no es 'todo'
+            }
+
+            const publicaciones = await Publicacion.find(filtro).sort({ fecha: -1 }); //ordenar x fecha..
+            res.status(200).send({
+                codigo: 0,
+                mensaje: 'Publicaciones obtenidas correctamente',
+                otrosdatos: publicaciones
+            });
+        } catch (error) {
+            console.error('Error al obtener las publicaciones:', error);
+            res.status(500).send({
+                codigo: 1,
+                mensaje: 'Hubo un error al obtener las publicaciones',
+                otrosdatos: null
+            });
+        }
+    },
 
 }
