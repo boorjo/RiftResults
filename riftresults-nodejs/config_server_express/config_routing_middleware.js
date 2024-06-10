@@ -1,8 +1,10 @@
 const routingCliente=require('./routing/routingCliente');
 const routingPortal=require('./routing/routingPortal');
+const routingAdmin = require('./routing/routingAdmin');
 
 module.exports=function(servExpress){
     //servExpress.use('/api/Portal', routingPortal);
-    servExpress.use('/api/Cliente', routingCliente); //<---- en modulo routingCliente estan endpoints zona cliente
-    servExpress.use('/api/Portal', routingPortal); //<---- en modulo routingPortal estan endpoints zona portal);
+    servExpress.use('/api/Cliente', routingCliente);
+    servExpress.use('/api/Portal', routingPortal);
+    servExpress.use('/api/Admin', routingAdmin);
 }

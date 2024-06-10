@@ -188,10 +188,10 @@ module.exports = {
     },
     obtenerPublicaciones: async (req, res, next) => {
         try {
-            const categoria = req.query.categoria; // Obtiene la categoría de la query string si existe
+            const categoria = req.query.categoria;
             let filtro = {};
             if (categoria && categoria !== 'todo') {
-                filtro = { categoria }; // Filtra por categoría si se especifica una y no es 'todo'
+                filtro = { categoria };
             }
 
             const publicaciones = await Publicacion.find(filtro).sort({ fecha: -1 }); //ordenar x fecha..
@@ -209,5 +209,60 @@ module.exports = {
             });
         }
     },
+    obtenerPublicacion: async (req, res, next) => {
+        try {
+          const id = req.params.id;
+          const publicacion = await Publicacion.findById(id);
+          if (!publicacion) {
+            res.status(200).send({
+              codigo: 1,
+              mensaje: 'Publicación no encontrada',
+              otrosdatos: null
+            });
+            return;
+          }
+          res.status(200).send({
+            codigo: 0,
+            mensaje: 'Publicación recuperada correctamente',
+            otrosdatos: publicacion
+          });
+        } catch (error) {
+          console.error('Error al recuperar la publicación:', error);
+          res.status(200).send({
+            codigo: 1,
+            mensaje: 'Hubo un error al recuperar la publicación',
+            otrosdatos: null
+          });
+        }
+      },
+      publicarComentario: async (req, res, next) => {
+        try {
+            console.log('req.body publicar...', req.body);
+          const { publicacionId, comentario } = req.body;
+          const publicacion = await Publicacion.findById(publicacionId);
+          if (!publicacion) {
+            res.status(200).send({
+              codigo: 1,
+              mensaje: 'Publicación no encontrada',
+              otrosdatos: null
+            });
+            return;
+          }
+          publicacion.comentarios.push(comentario);
+          await publicacion.save();
+          res.status(200).send({
+            codigo: 0,
+            mensaje: 'Comentario publicado correctamente',
+            otrosdatos: publicacion
+          });
+        } catch (error) {
+          console.error(error);
+          res.status(200).send({
+            codigo: 1,
+            mensaje: 'Hubo un error al publicar el comentario',
+            otrosdatos: null
+          });
+        }
+      }
 
 }

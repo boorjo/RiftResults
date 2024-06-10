@@ -6,6 +6,10 @@
     background-color: rgb(97, 97, 97)
 }
 
+.btn-gris {
+    background-color: grey;
+    color: white;
+}
 
 .ablanco:hover {
     color: white !important;
@@ -15,7 +19,12 @@
     .ablanco {
         font-size: 2.4vw;
     }
-    
-
+    .navbar-collapse .form-inline input[type="search"] {
+        width: 150px; /* Ajusta el ancho según sea necesario */
+        margin-right: 10px; /* Ajusta el espaciado según sea necesario */
+    }
 }
+
+
+
 

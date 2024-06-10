@@ -50,7 +50,7 @@ export class PanelClienteComponent implements OnInit {
 
   async ngOnInit() {
     this.datoscliente.update(() => this.storageSvc.RecuperarDatosCliente());
-    //console.log('Datos cliente...', this.datoscliente());
+    console.log('Datos cliente...', this.datoscliente());
     const _resp: IRestMessage = await this.restNodeSvc.RecuperarRoles();
     //console.log('_resp...', _resp);
     if (_resp.codigo === 0) {
@@ -123,7 +123,7 @@ export class PanelClienteComponent implements OnInit {
     }
 }
 
-eliminarEquipo(equipo: IEquipo): void {
+  eliminarEquipo(equipo: IEquipo): void {
     const indexEquipo = this.datoscliente()?.datosLol?.equipos?.findIndex(e => e.TeamId === equipo.TeamId);
     const indexEquipoId = this.datoscliente()?.datosLol?.equiposId?.indexOf(equipo.TeamId);
     if (indexEquipo !== undefined && indexEquipo > -1) {

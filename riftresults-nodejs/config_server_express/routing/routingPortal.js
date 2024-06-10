@@ -13,5 +13,7 @@ router.post('/AddCampeonFavorito', portalController.addCampeonFavorito);
 router.post('/EliminarCampeonFavorito', portalController.eliminarCampeonFavorito);
 router.post('/Foro/GuardarPublicacion', portalController.guardarPublicacion);
 router.get('/Foro/ObtenerPublicaciones', portalController.obtenerPublicaciones);
+router.get('/Foro/ObtenerPublicacion/:id', portalController.obtenerPublicacion);
+router.post('/Foro/PublicarComentario', portalController.publicarComentario);
 
 module.exports=router;

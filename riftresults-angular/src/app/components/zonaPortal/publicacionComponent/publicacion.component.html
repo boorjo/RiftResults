@@ -1,0 +1,76 @@
+<div class="container mt-2 bg-body-secondary p-3 rounded">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <button class="btn btn-light" (click)="router.navigate(['/Inicio/Foro'])">
+            <i class="fa fa-arrow-left"></i> Volver
+        </button>
+        <h1 style="font-family: 'Arial', sans-serif;">PUBLICACIÓN</h1>
+        <div></div> <!-- Espacio vacío para alinear el botón a la izquierda y el título al centro -->
+    </div>
+    <div class="card mb-3">
+      <div class="row g-0">
+        <div class="col-md-3 border-end d-flex justify-content-center align-items-center flex-column">
+          <img [src]="usuario?.cuenta?.imagenAvatarBASE64" class="m-2 img-fluid rounded-start center" width="30%" alt="Foto de usuario">
+          <p class="mx-2 card-text"><small class="text-muted">Publicado el {{ datePipe.transform(publicacion!.fecha, 'dd-MM-yyyy \'a las\' HH:mm') }} por <b>{{usuario?.cuenta?.login}}</b></small></p>
+        </div>
+        <div class="col-md-9">
+          <div class="card-body d-flex flex-column">
+            <h2 class="card-title">{{ publicacion!.titulo }}</h2>
+            <p class="card-text flex-grow-1">{{ publicacion!.contenido }}</p>
+            <button class="btn btn-primary align-self-end" data-bs-toggle="modal" data-bs-target="#modalComentario">
+                Añadir comentario <i class="fa fa-pencil-square"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <h1 style="font-family: 'Arial', sans-serif; text-align: center;" class="my-4">COMENTARIOS</h1>
+    @if (publicacion?.comentarios!.length>0) {
+        @for (comentario of this.publicacion?.comentarios; track this.publicacion?.comentarios) {
+            <div class="card mb-3 mt-4">
+              <div class="row g-0">
+                <div class="col-md-3 border-end d-flex justify-content-center align-items-center flex-column">
+                    <img [src]="comentario.autor.cuenta.imagenAvatarBASE64" class="m-2 img-fluid rounded-start center" width="30%" alt="Foto de usuario">
+                  <p class="mx-2 card-text"><small class="text-muted">Publicado el {{ datePipe.transform(comentario.fecha, 'dd-MM-yyyy \'a las\' HH:mm') }} por <b>{{comentario.autor.cuenta.login}}</b></small></p>
+                </div>
+                <div class="col-md-9">
+                  <div class="card-body">
+                    <p class="card-text">{{ comentario.contenido }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+        }
+    } @else {
+        <div class="alert alert-info" role="alert">
+            Todavía no hay comentarios...
+        </div>
+    }
+</div>
+
+<!-- modal -->
+<div id="modalComentario" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content" style="background-color: rgb(1, 17, 40); color: white;">
+        <div class="modal-header">
+          <h5 class="modal-title">Añadir Comentario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="formComentario" (ngSubmit)="publicarComentario()">
+            <div class="mb-3">
+              <label for="comentario" class="form-label">Comentario</label>
+              <textarea class="form-control" id="comentario" formControlName="comentario"></textarea>
+              @if (formComentario.controls['comentario'].errors?.['required'] && formComentario.controls['comentario'].touched) {
+                <span class="text-danger">* Debes escribir algo.</span>
+              }
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <span class="text-danger" style="font-size: small;">{{msg}}</span>
+              <button type="submit" class="btn btn-primary">Publicar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+</div>

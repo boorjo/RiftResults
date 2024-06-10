@@ -5,11 +5,14 @@ import { ICliente } from '../../../models/cliente';
 import { TOKEN_SERVICIOSTORAGE } from '../../../servicios/injectiontokenstorageservice';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IPublicacion } from '../../../models/publicacion';
+import { DatePipe } from '@angular/common';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-foro',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule],
+  providers: [DatePipe],
+  imports: [FormsModule, ReactiveFormsModule, RouterOutlet, RouterLink],
   templateUrl: './foro.component.html',
   styleUrl: './foro.component.css'
 })
@@ -25,7 +28,9 @@ export class ForoComponent {
   public publicaciones = signal<Array<IPublicacion>>([]);
 
   constructor(private restNodeSvc: RestnodeService,
-              @Inject(TOKEN_SERVICIOSTORAGE) storageSvc:SignalstorageService ) {
+              private router:Router,
+              @Inject(TOKEN_SERVICIOSTORAGE) storageSvc:SignalstorageService,
+              protected datePipe: DatePipe) {
     this.datoscliente.update(() => storageSvc.RecuperarDatosCliente());
     console.log('datos cliente...', this.datoscliente());
     this.obtenerPublicacionesPorCategoria("todo");
@@ -68,7 +73,7 @@ export class ForoComponent {
         }
 
       }).catch((error: any) => {
-        console.error('Error al guardar la publicación:', error);
+        console.log('Error al guardar la publicación:', error);
       });
     } else {
       console.log('FORMULARIO NO VALIDOOO!');
@@ -76,9 +81,16 @@ export class ForoComponent {
   }
 
   obtenerPublicacionesPorCategoria(categoria: string) {
-    this.restNodeSvc.obtenerPublicaciones(categoria).then(response => {
-      // Asumiendo que response.otrosdatos contiene un array de publicaciones
-      this.publicaciones.update(() => response.otrosdatos);
+    this.restNodeSvc.obtenerPublicaciones(categoria).then(async response => {
+      const publicaciones = response.otrosdatos;
+      for (const publicacion of publicaciones) {
+        const responseUsuario = await this.restNodeSvc.ObtenerUsuario(publicacion.usuarioId);
+        if (responseUsuario.codigo === 0) {
+          const usuario = responseUsuario.otrosdatos as ICliente;
+          publicacion.usuario = usuario;
+        }
+      }
+      this.publicaciones.update(() => publicaciones);
       console.log('Publicaciones actualizadas:', this.publicaciones());
     }).catch(error => {
       console.error('Error al obtener publicaciones:', error);

@@ -295,6 +295,32 @@ module.exports = {
                 mensaje: 'Error al cambiar contraseña'
             });
         }
-    }
+    },
+    obtenerUsuario: async (req, res, next) => {
+        try {
+            const id = req.params.id;
+            const usuario = await Cliente.findById(id);
+            if (!usuario) {
+              res.status(404).send({
+                codigo: 1,
+                mensaje: 'Usuario no encontrado',
+                otrosdatos: null
+              });
+              return;
+            }
+            res.status(200).send({
+              codigo: 0,
+              mensaje: 'Usuario obtenido correctamente',
+              otrosdatos: usuario
+            });
+          } catch (error) {
+            console.error('Error al obtener el usuario:', error);
+            res.status(500).send({
+              codigo: 1,
+              mensaje: 'Hubo un error al obtener el usuario',
+              otrosdatos: null
+            });
+          }
+        }
 }
 

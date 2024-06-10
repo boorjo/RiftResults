@@ -10,6 +10,9 @@ import { PanelClienteComponent } from './components/zonaUsuario/panelClienteComp
 import { accesoPerfilGuard } from './servicios_guards/acceso-perfil.guard';
 import { EquiposComponent } from './components/zonaPortal/equipos/equipos.component';
 import { ForoComponent } from './components/zonaPortal/foroComponent/foro.component';
+import { PublicacionComponent } from './components/zonaPortal/publicacionComponent/publicacion.component';
+import { ListaUsuariosComponent } from './components/zonaUsuario/listaUsuarios/lista-usuarios.component';
+import { AdminAccessGuard } from './servicios_guards/adminguard.guard';
 
 export const routes: Routes = [
   {
@@ -33,9 +36,19 @@ export const routes: Routes = [
       //{ path: 'liga', component: LigaComponent },
       { path: 'Equipos', component: EquiposComponent },
       { path: 'Campeones', component: CampeonesComponent },
-      { path: 'Foro', component: ForoComponent }
+      { path: 'Foro', component: ForoComponent },
+      { path: 'Publicacion/:id', component: PublicacionComponent }
+    ]
+  },
+  { path: 'Admin',
+    canActivate: [AdminAccessGuard], // <-- solo accesible si es admin
+    children: [
+      { path: 'Usuarios', 
+        component: ListaUsuariosComponent,
+        }
     ]
   },
     { path: '', component:InicioComponent }, //ruta raiz al arrancar!
-    { path: 'TerminosYPrivacidad', component: TerminosYPrivacidadComponent}
+    { path: 'TerminosYPrivacidad', component: TerminosYPrivacidadComponent},
+    { path: '**', redirectTo: '' }, //cualquier otra ruta redirige a la raiz
 ];

@@ -1,0 +1,81 @@
+<div class="container mt-2 bg-body-secondary container p-3 rounded">
+    <h1 class="text-center m-4">Usuarios</h1>
+    <table class="table table-striped table-dark table-responsive table-hover align-content-center" style="font-size: 0.8rem;">
+      <thead class="thead-dark">
+        <tr>
+          <th>Imagen</th>
+          <th>Correo</th>
+          <th>Login</th>
+          <th>Nombre</th>
+          <th>Apellidos</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of usuarios; track user._id ) {
+            <tr>
+                <td class="align-middle"><img [src]="user.cuenta.imagenAvatarBASE64 || '../../assets/img/noicon.png'" alt="img de usuario" style="max-width: 50px;" class="img-fluid"></td>
+                <td class="align-middle">{{ user.cuenta.email }}</td>
+                <td class="align-middle">{{ user.cuenta.login }}</td>
+                <td class="align-middle">{{ user.nombre }}</td>
+                <td class="align-middle"class="align-middle">{{ user.apellidos }}</td>
+                <td class="align-middle">
+                <button class="btn btn-light m-1" data-bs-toggle="modal" data-bs-target="#modalEditarUsuario" (click)="editUser(user)"><i class="fa fa-pencil"></i></button>
+                <button class="btn btn-light" (click)="deleteUser(user._id)"><i class="fa fa-trash"></i></button>
+                </td>
+            </tr>
+        }
+      </tbody>
+    </table>
+    <!-- MODAL EDITAR USUARIO -->
+    <div id="modalEditarUsuario" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content" style="background-color: rgb(1, 17, 40); color: white;">
+            <div class="modal-header">
+              <h5 class="modal-title">Editar Usuario</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form [formGroup]="formUsuario" (ngSubmit)="onSubmit()">
+                <div class="mb-3">
+                  <label for="nombre" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" formControlName="nombre">
+                </div>
+                <div class="mb-3">
+                  <label for="apellidos" class="form-label">Apellidos</label>
+                  <input type="text" class="form-control" formControlName="apellidos">
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Correo</label>
+                  <input type="email" class="form-control" formControlName="email">
+                </div>
+                <div class="mb-3">
+                  <label for="login" class="form-label">Login</label>
+                  <input type="text" class="form-control" formControlName="login">
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" formControlName="password">
+                </div>
+                <div class="mb-3">
+                  <label for="telefono" class="form-label">Teléfono</label>
+                  <input type="tel" class="form-control" formControlName="telefono">
+                </div>
+                <div class="mb-3">
+                  <label for="pais" class="form-label">País</label>
+                  <input type="text" class="form-control" formControlName="pais">
+                </div>
+                <div class="mb-3">
+                  <label for="rol" class="form-label">Rol</label>
+                  <input type="text" class="form-control" formControlName="rol">
+                </div>
+                <div class="modal-footer justify-content-between">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

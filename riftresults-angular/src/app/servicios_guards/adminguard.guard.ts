@@ -1,3 +1,4 @@
+// admin-access.guard.ts
 import { Inject, Injectable, signal } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { TOKEN_SERVICIOSTORAGE } from '../servicios/injectiontokenstorageservice';
@@ -7,7 +8,7 @@ import { ICliente } from '../models/cliente';
 @Injectable({
   providedIn: 'root'
 })
-export class accesoPerfilGuard implements CanActivate {
+export class AdminAccessGuard implements CanActivate {
 
   public datoscliente = signal<ICliente | null>(null);
 
@@ -19,17 +20,13 @@ export class accesoPerfilGuard implements CanActivate {
     state: RouterStateSnapshot): boolean | UrlTree {
 
     this.datoscliente.update(() => this.storageSvc.RecuperarDatosCliente());
-      this.datoscliente()?.cuenta.esAdmin
     const datos = this.datoscliente();
 
     console.log('datos en guard...', datos);
 
-    if (datos == null) {
+    if (datos == null || !datos.cuenta.esAdmin) {
       return this.router.createUrlTree(['/Cliente/Login']);
     }
-    if (typeof datos === 'object' && datos !== null && 'cuenta' in datos) {
-      return datos.cuenta.email && datos.cuenta.email.trim() !== '' ? true : this.router.createUrlTree(['/Cliente/Login']);
-    }
-    return this.router.createUrlTree(['/Cliente/Login']);
+    return true;
   }
 }

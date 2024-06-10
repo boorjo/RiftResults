@@ -86,6 +86,17 @@ export class RestnodeService {
     );
   }
 
+  public ObtenerUsuario(id: string){
+    return lastValueFrom(
+      this._httpclient.get<IRestMessage>(
+        `http://localhost:3000/api/Cliente/ObtenerUsuario/${id}`,
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+
   //#endregion
 
   //#region ------ metodos para zona Portal ----------
@@ -167,7 +178,7 @@ export class RestnodeService {
                 }
               )
             );
-          }
+      }
 
       public obtenerPublicaciones(categoria: string = 'todo') {
           return lastValueFrom(
@@ -179,10 +190,66 @@ export class RestnodeService {
               )
           );
       }
-
-
+      public recuperarPublicacion(id: string) {
+        return lastValueFrom(
+          this._httpclient.get<IRestMessage>(
+            `http://localhost:3000/api/Portal/Foro/ObtenerPublicacion/${id}`,
+            {
+              headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+            }
+          )
+        );
+      }
+      public publicarComentario(publicacionId: string, publicacion: any){
+        const body = {
+          publicacionId: publicacionId,
+          comentario: publicacion
+        };
+        return lastValueFrom(
+          this._httpclient.post<IRestMessage>(
+            'http://localhost:3000/api/Portal/Foro/PublicarComentario',
+            body,
+            {
+              headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+            }
+          )
+        );
+      }
       //#endregion
 
-
+  //#endregion
+  //#region ------ metodos para zona ADMIN ----------
+  public RecuperarUsuarios(){
+    return lastValueFrom(
+      this._httpclient.get<IRestMessage>(
+        'http://localhost:3000/api/Admin/RecuperarUsuarios',
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+  public EliminarUsuario(id: string){
+    return lastValueFrom(
+      this._httpclient.post<IRestMessage>(
+        `http://localhost:3000/api/Admin/EliminarUsuario/${id}`,
+        { idusuario: id },
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
+  public EditarUsuario(usuario: ICliente){
+    return lastValueFrom(
+      this._httpclient.post<IRestMessage>(
+        'http://localhost:3000/api/Admin/EditarUsuario',
+        usuario,
+        {
+          headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+        }
+      )
+    );
+  }
   //#endregion
 }

@@ -1,10 +1,8 @@
-//modulo de node para definir endpoints zona cliente con sus respectivas funciones middleware para su procesamiento
-//se meten en objeto router y se exporta este objeto router:
 const express=require('express');
 const router=express.Router(); //<----- objeto router a exportar...
 const jsonwebtoken=require('jsonwebtoken');
 
-const clienteController=require('../../controllers/clienteController');
+const adminController=require('../../controllers/adminController');
 
 async function checkJWT(req,res,next){
     try {
@@ -20,7 +18,7 @@ async function checkJWT(req,res,next){
         console.log('error al intentar comprobar el JWT enviado desde el cliente Angular...', error);
         res.status(401)
             .send(
-                 { 
+                 {
                     codigo:1,
                     mensaje:'error al intentar comprobar el JWT enviado',
                     error:error.mensaje,
@@ -32,14 +30,8 @@ async function checkJWT(req,res,next){
     }
 }
 
-//añado endpoints y funciones middleware a ese objeto router importardas desde un objeto javascript q funciona como si fuese un "controlador":
-//router.post('/Login', clienteController.login);
-router.post('/Registro', clienteController.registro);
-router.post('/ActivarCuenta/:token', clienteController.activarCuenta);
-router.post('/Login', clienteController.login);
-router.get('/RecuperarRoles', clienteController.recuperarRoles);
-router.post('/ModificarPerfil', clienteController.modificarPerfil);
-router.post('/CambiarPassword', clienteController.cambiarPassword);
-router.get('/ObtenerUsuario/:id', clienteController.obtenerUsuario);
+router.get('/RecuperarUsuarios', adminController.recuperarUsuarios);
+router.post('/EliminarUsuario/:id', adminController.eliminarUsuario);
+router.post('/EditarUsuario', adminController.editarUsuario);
 
 module.exports=router;

@@ -53,10 +53,10 @@
       <div class="modal-dialog">
         <div class="modal-content" style="background-color: rgb(1, 17, 40); color: white;">
           <div class="modal-header">
-            <button type="button" class="btn btn-light fa fa-close" data-bs-dismiss="modal"></button>
-            <button type="button" class="btn btn-light fa fa-arrow-left" (click)="mostrarEquipoAnterior()"></button>
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i class=" fa fa-close"></i></button>
+            <button type="button" class="btn btn-light" (click)="mostrarEquipoAnterior()"><i class=" fa fa-arrow-left"></i></button>
             <h4 class="modal-title">{{ equipoSeleccionado?.Name }}</h4>
-            <button type="button" class="btn btn-light fa fa-arrow-right" (click)="mostrarEquipoSiguiente()"></button>
+            <button type="button" class="btn btn-light" (click)="mostrarEquipoSiguiente()"><i class=" fa fa-arrow-right"></i></button>
           </div>
           <div class="modal-body">
             <div class="row">
@@ -69,13 +69,13 @@
             </div>
           </div>
           <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-default btn-light" (click)="handleFavorito(equipoSeleccionado!.TeamId)">
+            <button type="button" class="btn btn-default btn-light" (click)="handleFavorito(equipoSeleccionado!.TeamId, equipoSeleccionado!)">
               <img width="20px" src="{{corazonLleno() ? '../../../../../assets/img/heart-circle-minus-solid.png' : '../../../../../assets/img/heart-circle-plus-solid.png' }}">
             </button>
+            <span class="text-danger" style="font-size: small;">{{msg}}</span>
             <button type="button" class="btn btn-default btn-light" data-bs-dismiss="modal">Cerrar</button>
           </div>
         </div>
       </div>
     </div>
-
 </div>

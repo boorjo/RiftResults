@@ -22,5 +22,5 @@ export interface ICliente {
         equiposId?:     Array<number>;
         campeonesId?:   Array<string>;
     }
-    _id?:       string;
+    _id:       string;
 }

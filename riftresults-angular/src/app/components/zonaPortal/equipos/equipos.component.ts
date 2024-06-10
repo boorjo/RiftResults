@@ -24,7 +24,8 @@ export class EquiposComponent implements OnInit {
   indiceEquipoSeleccionado: number = 0;
   corazonLleno = signal<boolean>(false);
   maxEquipos: number = 3;
-  datoscliente: ICliente | null = null;
+  datoscliente = signal <ICliente | null>(null);
+  msg : string = "";
 
 
   constructor(private restNodeSvc: RestnodeService,
@@ -34,7 +35,8 @@ export class EquiposComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadEquipos();
-    this.datoscliente = this.storageSvc.RecuperarDatosCliente();
+    this.datoscliente.update(() => this.storageSvc.RecuperarDatosCliente());
+    this.msg = "";
   }
 
     async loadEquipos() {
@@ -80,6 +82,10 @@ export class EquiposComponent implements OnInit {
   mostrarDetalleEquipo(equipo: IEquipo): void {
     this.equipoSeleccionado = equipo;
     this.indiceEquipoSeleccionado = this.equiposFiltrados().indexOf(equipo);
+  
+    // comprobamos para mostrar corazon lleno o vacio
+    const estaEnLaLista = this.datoscliente()?.datosLol?.equiposId?.includes(equipo.TeamId | 0);
+    this.corazonLleno.update(() => estaEnLaLista!);
   }
 
   mostrarEquipoAnterior(): void {
@@ -96,26 +102,38 @@ export class EquiposComponent implements OnInit {
     }
   }
 
-  handleFavorito(teamId: number): void {
-    if (this.datoscliente && this.datoscliente.datosLol && this.datoscliente.datosLol.equiposId) {
-      const estaEnLaLista = this.datoscliente.datosLol.equiposId.includes(teamId | 0);
+  handleFavorito(teamId: number, equipo: IEquipo): void {
+    if (this.datoscliente && this.datoscliente()?.datosLol) {
+      // Inicializa equiposId y equipos si no existen
+      if (!this.datoscliente()?.datosLol.equiposId) {
+        this.datoscliente()!.datosLol.equiposId = [];
+      }
+      if (!this.datoscliente()!.datosLol.equipos) {
+        this.datoscliente()!.datosLol.equipos = [];
+      }
+  
+      const estaEnLaLista = this.datoscliente()?.datosLol?.equiposId?.includes(teamId | 0);
       if (estaEnLaLista) {
-        const index = this.datoscliente.datosLol.equiposId.indexOf(teamId);
-        if (index > -1) {
-          this.datoscliente.datosLol.equiposId.splice(index, 1);
-          this.restNodeSvc.EliminarEquipoFavorito(this.datoscliente._id || '', teamId);
-          this.storageSvc.AlmacenarDatosCliente(this.datoscliente);
-          console.log('Datos de cliente a almacenar..', this.datoscliente);
+        const index = this.datoscliente()?.datosLol?.equiposId?.indexOf(teamId);
+        if (index! > -1) {
+          this.datoscliente()?.datosLol?.equiposId?.splice(index!, 1);
+          this.datoscliente()?.datosLol?.equipos?.splice(index!, 1); // Elimina el equipo del array de equipos
+          this.restNodeSvc.EliminarEquipoFavorito(this.datoscliente()?._id || '', teamId);
+          this.storageSvc.AlmacenarDatosCliente(this.datoscliente());
+          this.msg = "";
+          console.log('Datos de cliente a almacenar..', this.datoscliente());
         }
         this.corazonLleno.update(() => false);
       } else {
-        if(this.datoscliente.datosLol.equiposId.length < this.maxEquipos){
-            this.datoscliente.datosLol.equiposId.push(teamId);
-            this.corazonLleno.update(() => true);
-            this.restNodeSvc.AddEquipoFavorito(this.datoscliente._id || '', teamId);
-            this.storageSvc.AlmacenarDatosCliente(this.datoscliente);
-            console.log('Datos de cliente a almacenar..', this.datoscliente);
+        if(this.datoscliente()!.datosLol!.equiposId!.length < this.maxEquipos){
+          this.datoscliente()!.datosLol!.equiposId!.push(teamId);
+          this.datoscliente()!.datosLol!.equipos!.push(equipo); // Añade el equipo al array de equipos
+          this.corazonLleno.update(() => true);
+          this.restNodeSvc.AddEquipoFavorito(this.datoscliente()!._id || '', teamId);
+          this.storageSvc.AlmacenarDatosCliente(this.datoscliente());
+          console.log('Datos de cliente a almacenar..', this.datoscliente());
         }else{
+          this.msg = "No se pueden añadir más de 3 equipos";
           console.log('No se pueden añadir más de 3 equipos');
         }
       }
@@ -124,7 +142,5 @@ export class EquiposComponent implements OnInit {
       console.log('Usuario no logeado');
     }
   }
-
-
-
+  
 }

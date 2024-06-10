@@ -27,6 +27,7 @@ export class AppComponent {
   public jwt = signal<string>("");
   private loginSubscription: Subscription;
   public esAdmin = signal<boolean>(false);
+  public isMenuOpen = signal<boolean>(false);
 
   constructor(private router:Router,
               @Inject(TOKEN_SERVICIOSTORAGE) private storageSvc:IStorageService){
@@ -54,5 +55,10 @@ export class AppComponent {
 
   ngOnDestroy() {
     this.loginSubscription.unsubscribe();
+  }
+  //funcion cambiar isMenuOpen a lo contrario que esté
+  toggleMenu(){
+    this.isMenuOpen.update((prev) => !prev);
+    console.log('Menu abierto: ', this.isMenuOpen());
   }
 }

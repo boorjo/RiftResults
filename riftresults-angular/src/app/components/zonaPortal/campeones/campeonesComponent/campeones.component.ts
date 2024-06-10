@@ -22,20 +22,21 @@ export class CampeonesComponent implements OnInit {
   indiceCampeonSeleccionado: number = 0;
   radarChart: any;
   corazonLleno = signal<boolean>(false);
-  datoscliente: ICliente | null = null;
+  datoscliente = signal<ICliente | null> (null);
   maxCampeones: number = 5;
+  msg : string = "";
 
   @ViewChild('radarCanvas') radarCanvas: any;
 
   constructor(private campeonesSvc: ApicampeonesService,
               private restNodeSvc: RestnodeService,
               @Inject(TOKEN_SERVICIOSTORAGE) private storageSvc:IStorageService,
-              private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadCampeones();
-    this.datoscliente = this.storageSvc.RecuperarDatosCliente();
+    this.datoscliente.update(() =>  this.storageSvc.RecuperarDatosCliente());
+    this.msg = "";
   }
 
   loadCampeones(): void {
@@ -79,7 +80,12 @@ export class CampeonesComponent implements OnInit {
     this.campeonSeleccionado = campeon;
     this.indiceCampeonSeleccionado = this.campeonesFiltrados().indexOf(campeon);
     this.actualizarGrafica();
+  
+    // comprobamos para mostrar corazon lleno / vacio
+    const estaEnLaLista = this.datoscliente()?.datosLol?.campeonesId?.includes(campeon.name);
+    this.corazonLleno.update(() => estaEnLaLista!);
   }
+  
 
   mostrarCampeonAnterior(): void {
     if (this.indiceCampeonSeleccionado > 0) {
@@ -162,30 +168,41 @@ export class CampeonesComponent implements OnInit {
     }
   }
 
-  handleFavoritoCampeon(campeonId: string): void {
-    if (this.datoscliente && this.datoscliente.datosLol && this.datoscliente.datosLol.campeonesId) {
-      const estaEnLaLista = this.datoscliente.datosLol.campeonesId.includes(campeonId);
+  handleFavoritoCampeon(campeonId: string, campeon: ICampeon): void {
+    if (this.datoscliente && this.datoscliente()?.datosLol) {
+      // Inicializa campeonesId y campeones si no existen
+      if (!this.datoscliente()?.datosLol.campeonesId) {
+        this.datoscliente()!.datosLol.campeonesId = [];
+      }
+      if (!this.datoscliente()?.datosLol.campeones) {
+        this.datoscliente()!.datosLol.campeones = [];
+      }
+  
+      const estaEnLaLista = this.datoscliente()?.datosLol?.campeonesId?.includes(campeonId);
       if (estaEnLaLista) {
-        const index = this.datoscliente.datosLol.campeonesId.indexOf(campeonId);
-        if (index > -1) {
-          this.datoscliente.datosLol.campeonesId.splice(index, 1);
-          this.restNodeSvc.EliminarCampeonFavorito(this.datoscliente._id || '', campeonId);
-          this.storageSvc.AlmacenarDatosCliente(this.datoscliente);
-          console.log('Datos de cliente a almacenar..', this.datoscliente);
+        const index = this.datoscliente()?.datosLol?.campeonesId?.indexOf(campeonId);
+        if (index! > -1) {
+          this.datoscliente()?.datosLol?.campeonesId?.splice(index!, 1);
+          this.datoscliente()?.datosLol?.campeones?.splice(index!, 1); // Elimina el campeón del array de campeones
+          this.restNodeSvc.EliminarCampeonFavorito(this.datoscliente()?._id || '', campeonId);
+          this.storageSvc.AlmacenarDatosCliente(this.datoscliente());
+          console.log('Datos de cliente a almacenar..', this.datoscliente());
         }
         this.corazonLleno.update(() => false);
       } else {
-        if(this.datoscliente.datosLol.campeonesId.length < this.maxCampeones){
-            this.datoscliente.datosLol.campeonesId.push(campeonId);
-            this.corazonLleno.update(() => true);
-            this.restNodeSvc.AddCampeonFavorito(this.datoscliente._id || '', campeonId);
-            this.storageSvc.AlmacenarDatosCliente(this.datoscliente);
-            console.log('Datos de cliente a almacenar..', this.datoscliente);
+        if(this.datoscliente()!.datosLol!.campeonesId!.length < this.maxCampeones){
+          this.datoscliente()!.datosLol!.campeonesId!.push(campeonId);
+          this.datoscliente()!.datosLol!.campeones!.push(campeon); // Añade el campeón al array de campeones
+          this.corazonLleno.update(() => true);
+          this.restNodeSvc.AddCampeonFavorito(this.datoscliente()!._id || '', campeonId);
+          this.storageSvc.AlmacenarDatosCliente(this.datoscliente());
+          this.msg = "";
+          console.log('Datos de cliente a almacenar..', this.datoscliente());
         }else{
+          this.msg = "No se pueden añadir más de 5 campeones";
           console.log('No se pueden añadir más de 5 campeones');
         }
       }
-      this.cdr.detectChanges();
     } else {
       console.log('Usuario no logeado');
     }

@@ -31,7 +31,7 @@
           </label>
       </div>
     </div>
-    
+
     <!-- MODAL NUEVA PUBLICACIÓN -->
     <div class="d-flex justify-content-center my-4">
       <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#modalNuevaPublicacion">
@@ -99,16 +99,18 @@
     <div class="publicaciones-container">
       @for (publicacion of publicaciones() ; track publicacion._id) {
         <div class="publicacion-card mb-3">
-          <div class="card">
-            <div class="card-header">
-              {{ publicacion.categoria }}
+          <a style="text-decoration: none;" [routerLink]="['/Inicio/Publicacion', publicacion._id]" routerLinkActive="router-link-active">
+            <div class="card">
+              <div class="card-header">
+                {{ publicacion.categoria }}
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{ publicacion.titulo }}</h5>
+                <p class="card-text">{{ publicacion.contenido }}</p>
+                <p class="card-text"><small class="text-muted">Publicado el {{ datePipe.transform(publicacion.fecha, 'dd-MM-yyyy \'a las\' HH:mm') }} por {{publicacion.usuario?.cuenta?.login}}</small></p>
+              </div>
             </div>
-            <div class="card-body">
-              <h5 class="card-title">{{ publicacion.titulo }}</h5>
-              <p class="card-text">{{ publicacion.contenido }}</p>
-              <p class="card-text"><small class="text-muted">Publicado el {{ publicacion.fecha }}</small></p>
-            </div>
-          </div>
+          </a>
         </div>
       }
     </div>
